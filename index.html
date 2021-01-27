@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/codemirror.min.css" integrity="sha512-MWdvo/Qqcf4pY1ecQUB1uBn0qLp19U/qJ1Rpp2BDZeuBA7YsFEwkvqR/+aG4BroPiAYDunKJ6X8R/Pmdt3p7oA==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/theme/idea.min.css" integrity="sha512-N+NJU9LvDmlEQyb3xDkcXPOR8SDXQGx4kRs9wCi/U6GPfN/FSsfjIzY61Svd8eg4Y1VcbBL1XhuC3VzzQYmcJg==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/theme/neat.min.css" integrity="sha512-yySSMHK1wb+xdn5GRRSXY6KQMMMyBS4jGB5bKms2Gu2U9mGQnk4zUavraMI/Cc0h19kYNPlQYkqK6pVXM4O56Q==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/addon/hint/show-hint.min.css" integrity="sha512-OmcLQEy8iGiD7PSm85s06dnR7G7C9C0VqahIPAj/KHk5RpOCmnC6R2ob1oK4/uwYhWa9BF1GC6tzxsC8TIx7Jg==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/codemirror.min.js" integrity="sha512-UZAFKlbB343VyEfCComsVIxp836iYUvHyAuRYFoVN4LTNB6mpM+8EgKW8ymIV2qLZQsIiNdbpmJuA8y6IKzOow==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/mode/sql/sql.min.js" integrity="sha512-dfObApt1XdGl62IJLrjbIOc9QtnRORA5TCwdnJkSj6C/KjwMz2L/Sc4WlcrgAuWoY+n5xTf6NMMojoUOlgwjug==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/addon/edit/matchbrackets.min.js" integrity="sha512-rjbQerijlYZoHtP8XJGb7xkwnSRUHiydD8NE9fpe01feRM5RDZSZ9Tia+a9hV2cFHMilO4hZaeeTc9ESiik9wQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/addon/hint/show-hint.min.js" integrity="sha512-0DOTP7HSS4G4YFu9YSLmHMmzSUQmK136iJLWMmy3TxaDBI6K/r9NSo7+5LmwPjwW97EkR5VT8qdRoLqv/D/TeQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/addon/hint/sql-hint.min.js" integrity="sha512-OHVTwNN/yLMJj0zf2/pdkr/My9znB4byN7ibdXW+ha61wsKgAPyUZXAkgoQipu0MDQMfNmE17mFhNs9wLbK5QA==" crossorigin="anonymous"></script>
+    
+    <!--SQL Formatter-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql-formatter/3.1.0/sql-formatter.min.js" integrity="sha512-Oc+ctzmlsoi9ngpKwz6JSHcQJTJKfuUY8P7D74evSFg6wcE6dz6+SiFQn8Og2trQJP1KFE1HWFxVoV0+d5jyLA==" crossorigin="anonymous"></script>						
+    
+    <!-- Tabulator -->
+    <link href="https://unpkg.com/tabulator-tables@4.9.3/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="my.css">
+    <script src="my.js"></script>
+  </head>
+  <body>
+    
+    <div class="header">
+      <h2>PSC Queries</h2>
+    </div>
+    <div class="navbar">
+      <a href="#" onClick="window.location.reload();">Home</a>
+      <a href="#" onclick="makeSqlTablesMenu();return false;">Redundant Tables</a>
+      <div class="dropdown">
+	<button class="dropbtn">Article Queries
+	  <i class="fa fa-caret-down"></i>
+	</button>
+	<div id="queriesMenuId" class="dropdown-content">
+	</div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="left">
+	<ul id="myMenu">
+	  &nbsp;
+	</ul>
+      </div>
+      <div class="middle" style="background-color:#bbb;">
+	<textarea id="myTextarea" name="myTextarea" ></textarea>
+	<div id="buttons" class="buttons">
+	  <button class="btn" onclick="runQuery()" ><i class="fa fa-play-circle"></i> Run</button>
+	  <button class="btn" onclick="clearInput()"><i class="fa fa-stop-circle"></i> Clear</button>
+	</div>
+	<div id="example-table"></div>
+      </div>  
+    </div>
+    <div class="footer">
+      <h2><a href="http://klab.ilc.cnr.it" target='_blank'>The Knowledge Laboratory @ ILC-CNR</a></h2>
+    </div>
+  </body>
+</html>
