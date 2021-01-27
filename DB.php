@@ -1,11 +1,11 @@
 <?php
 
-ini_set("memory_limit","384M");
+ini_set("memory_limit","512M");
 
 $host = "localhost";
-$userName = "root";
-$password = "";
-$dbName = "simplelexicon";
+$userName = "simple";
+$password = "simple12";
+$dbName = "simplelexicon_new";
 
 file_put_contents('php://stderr', print_r($_POST, TRUE));
 

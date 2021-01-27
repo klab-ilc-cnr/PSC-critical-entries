@@ -148,7 +148,7 @@ var queries = [
 
 function makeSqlTablesMenu () {
     var arrayLabel = [
-	'Redundant PHU',
+	'Redundant PUs',
 	'Redundant MUSPHU',
 	'Redundant MUS',
 	'Redundant USEM',
