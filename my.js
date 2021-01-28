@@ -1,3 +1,4 @@
+
 window.onload = function() {
 
     //CODEMIRROR Editor init
@@ -10,7 +11,7 @@ window.onload = function() {
     });
     
     //editor.getDoc().setValue(sqlFormatter.format("select * from mus where idMus like 'MUScast%'"));
-    
+
 
     //TABULATOR table result init
     var table = new Tabulator("#example-table", {
@@ -27,17 +28,21 @@ window.onload = function() {
             //url - the URL of the request
             //params - the parameters passed with the request
             //response - the JSON object returned in the body of the response.
+	    var el = document.getElementById("querystatus");
+	    el.innerHTML = "Query ok.";
+	    el.className = "success";
+	    clearResults();
 	    return response;
 	},
 
 	ajaxError: async function(error) { //DA RIVEDERE SE SI VUOLE AVERE UN FEEDBACK DELL'ERRORE SU QUERY
-  	    // alert(error.body);
-	    const reader = error.body.getReader();
-	    while (true) {
-		const { value, done } = await reader.read();
-		if (done) break;
-		console.log('Received', value);
-	    }
+	    error.json().then(data => {
+		//console.log("Type " + data.message);
+		//console.log("ErrMessage " + data.code);
+		var el = document.getElementById("querystatus");
+		el.innerHTML = data.message;
+		el.className = "error";
+	    });
 	    clearResults();
 	},
 
@@ -50,9 +55,15 @@ window.onload = function() {
 	    
             return definitions;
 	},
-	footerElement:"<span style='display:inline-block;float:left;padding-right:20px;'>Number of rows:</span><span style='display:inline-block;float:left;' id='row-count'>Rows: </span>", //add element element to footer to contain count
-	dataFiltered: updateTabulatorFooter, //call updateFooter function when callback triggered
-	dataLoaded:   updateTabulatorFooter, //call updateFooter function when callback triggered
+	footerElement: "<span style='display:inline-block;float:left;padding-top:inherit;padding-right:20px;'>Number of rows:</span><span style='display:inline-block;padding-top:inherit;float:left;' id='row-count'>Rows: </span>", //add element element to footer to contain count
+	dataFiltered: function(filter,rows) {
+	    var el = document.getElementById("row-count");
+	    el.innerHTML = rows.length;
+	},
+	dataLoaded:   function(data) {
+	    var el = document.getElementById("row-count");
+	    el.innerHTML = data.length;
+	},
     });
 
     //init gui
@@ -63,25 +74,21 @@ window.onload = function() {
 } //window.onload() END
 
 
-
-
-
-function updateTabulatorFooter(data){
-   var el = document.getElementById("row-count");
-   el.innerHTML = data.length;
-}
-
 function editorSetContent(query){
     var editor = document.querySelector('.CodeMirror').CodeMirror;
 
     /* REF: https://github.com/zeroturnaround/sql-formatter */
-    var sqlString = sqlFormatter.format(query, {  language: 'pl/sql', uppercase: true, indent: '   '});
+    var sqlString = sqlFormatter.format(query, {  language: 'sql', uppercase: true, indent: '   '});
     sqlString =  sqlString.replace(/,\n\s*/g,', ');
     editor.setValue(sqlString);
 
 }
 
 function runQuery(query) {
+    //remove any error message
+    var el = document.getElementById("querystatus");
+    el.innerHTML ="";
+    el.className = "success";
     var editor = document.querySelector('.CodeMirror').CodeMirror;
     //alert(editor.getValue());
     var table = Tabulator.prototype.findTable('#example-table')[0];
@@ -96,7 +103,13 @@ function clearInput(){
 
 function clearResults() {
     var table = Tabulator.prototype.findTable('#example-table')[0];
+    table.clearFilter();
+    table.clearHeaderFilter();
     table.clearData();
+}
+
+function clearFilters() {
+    var table = Tabulator.prototype.findTable('#example-table')[0];
     table.clearFilter();
     table.clearHeaderFilter();
 }

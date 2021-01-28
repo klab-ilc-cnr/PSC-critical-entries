@@ -1,41 +1,62 @@
 <?php
 
 ini_set("memory_limit","512M");
+$config = include('configDB.php');
 
-$host = "localhost";
-$userName = "simple";
-$password = "simple12";
-$dbName = "simplelexicon_new";
+$host = $config['hostname'];
+$userName = $config['username'];
+$password = $config['password'];
+$dbName = $config['dbname'];
 
-file_put_contents('php://stderr', print_r($_POST, TRUE));
+//file_put_contents('php://stderr', print_r($_POST, TRUE));
 
 $sqlcommand = $_POST['query'];
 // Create database connection
 try  {
     $mysqli = new mysqli($host, $userName, $password, $dbName);
     if ($mysqli->connect_error) {
-        die("Connection failed: " . $mysqli->connect_error);
+        file_put_contents('php://stderr', 'Connect Error: ' . $mysqli->connect_error . PHP_EOL);
+        http_response_code(500);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode(array('type' => 'ERROR', 'message' => 'Connect Error: ' . $mysqli->connect_error));
+        return;
     }
     $tabledata = array();
+    
     if($result = $mysqli->query($sqlcommand)) {// or die mysqli_error($mysqli);    
         while($row = $result->fetch_array(MYSQLI_ASSOC)){
-            $tabledata[] = $row; 
+            $tabledata[] = mb_convert_encoding($row,'UTF-8'); 
         }
         $result->close();
+        $mysqli->close();
     } else {
-        file_put_contents('php://stderr', mysqli_error($mysqli));
-        header('HTTP/1.1 500 Internal Server Booboo');
-        header('Content-Type: application/json; charset=UTF-8');
-        echo json_encode(array('message' => 'ERROR', 'code' => 1337));
+        if( $mysqli -> errno > 0) {
+            file_put_contents('php://stderr', "ERR: " .  mysqli_error($mysqli). PHP_EOL);
+            http_response_code(500);
+            header('Content-Type: application/json; charset=UTF-8');
+            echo json_encode(array('type' => 'ERROR', 'message' => mysqli_error($mysqli)));
+            $mysqli->close();
+            return;
+        }
     }
     
-    $mysqli->close();
 } catch (mysqli_sql_exception $e) {
-    file_put_contents('php://stderr', $e);
+    file_put_contents('php://stderr',  $e->errorMessage(). PHP_EOL);
+    http_response_code(500);
+    header('Content-Type: application/json; charset=UTF-8');
+    echo json_encode(array('type' => 'ERROR', 'message' => 'mysqli_sql_exception: ' . $e->errorMessage()));
+    return;
 }
 
+if (json_encode($tabledata) === false){
+    file_put_contents('php://stderr', 'A json_encode error: '.json_last_error_msg() . PHP_EOL);
+    http_response_code(500);
+    header('Content-Type: application/json; charset=UTF-8');
+    echo json_encode(array('type' => 'ERROR', 'message' => json_last_error_msg()));
 
-header('Content-Type: application/json');
-echo json_encode($tabledata)."\n";
+} else {
+    header('Content-Type: application/json');
+    echo json_encode($tabledata)."\n";
+}
 
 ?>

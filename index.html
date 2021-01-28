@@ -47,13 +47,15 @@
 	  &nbsp;
 	</ul>
       </div>
-      <div class="middle" style="background-color:#bbb;">
+      <div class="middle">
 	<textarea id="myTextarea" name="myTextarea" ></textarea>
 	<div id="buttons" class="buttons">
 	  <button class="btn" onclick="runQuery()" ><i class="fa fa-play-circle"></i> Run</button>
-	  <button class="btn" onclick="clearInput()"><i class="fa fa-stop-circle"></i> Clear</button>
+	  <button class="btn" onclick="clearFilters()"><i class="fa fa-stop-circle"></i> Clear Filters</button>
 	</div>
 	<div id="example-table"></div>
+	<div id="querystatus" class="success">
+	</div>
       </div>  
     </div>
     <div class="footer">
