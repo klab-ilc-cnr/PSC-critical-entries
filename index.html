@@ -31,12 +31,22 @@
     </div>
     <div class="navbar">
       <a href="#" onClick="window.location.reload();">Home</a>
-      <a href="#" onclick="makeSqlTablesMenu();return false;">Redundant Entries</a>
+      
       <div class="dropdown">
-	<button class="dropbtn">Article Queries
+	<button class="dropbtn">Size and Coverage
 	  <i class="fa fa-caret-down"></i>
 	</button>
-	<div id="queriesMenuId" class="dropdown-content">
+	<div id="sizeAndCoverageQueriesMenuId" class="dropdown-content">
+	</div>
+      </div>
+
+      <a href="#" onclick="makeRedundantEntriesMenu();return false;">Redundant Entries</a>
+
+      <div class="dropdown">
+	<button class="dropbtn">Peculiar Entries
+	  <i class="fa fa-caret-down"></i>
+	</button>
+	<div id="peculiarEntriesQueriesMenuId" class="dropdown-content">
 	</div>
       </div>
     </div>

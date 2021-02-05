@@ -16,6 +16,18 @@ window.onload = function() {
     //TABULATOR table result init
     var table = new Tabulator("#example-table", {
 	autoColumns:true,
+/*	autoColumnsDefinitions:[
+	    {field:"id", visible:false},
+            {field:"idRedundant", headerFilter:true}, //add input editor to the name column
+            {field:"idReferred", headerFilter:true}, //add header filters to the age column
+            {field:"idPhu", headerFilter:true}, //add header filters to the age column
+            {field:"idMus", headerFilter:true}, //add header filters to the age column
+	    {field:"status", headerFilter:true, headerFilterFunc:"="},
+	    {field:"naming", headerFilter:true, headerFilterFunc:"starts"},
+	    {field:"phono", headerFilter:true, headerFilterFunc:"starts"},
+	    {field:"pos", headerFilter:true, headerFilterFunc:"="},
+	    
+	],*/
 	placeholder:"No Data Available", //display message to user on empty table
 	layout:"fitColumns",
 //	layout:"fitDataStretch",
@@ -48,9 +60,31 @@ window.onload = function() {
 
 	autoColumnsDefinitions:function(definitions){
             //definitions - array of column definition objects
-	    
+	    console.log(definitions);
             definitions.forEach((column) => {
 		column.headerFilter = true; // add header filter to every column
+		/*		field: "id"
+				headerFilter: true
+				sorter: "number"
+				title:"id"*/
+		if(column.field=="id") {
+		    column.visible=false;
+		}
+		if(column.sorter=="string") {
+//		    column.headerFilterFunc="starts";
+		}
+		if(column.sorter=="alphanum") {
+//		    column.headerFilterFunc="starts";
+		}
+		
+		if(column.sorter=="number" ) {
+		    column.headerFilterFunc="=";
+		}
+
+		if(column.field=="count(*)") {
+		    column.headerFilter=false;
+		}
+		//column.headerFilterFunc = "starts";
             });
 	    
             return definitions;
@@ -69,7 +103,10 @@ window.onload = function() {
     //init gui
 //    updateQueryList(0);
     //makeSqlTablesMenu();
-    makeQueriesMenu();
+
+    //costrisco i dropdown menu
+    makeSizeAndCoverageMenu();
+    makePeculiarEntriesQueriesMenu();
 
 } //window.onload() END
 
@@ -116,86 +153,152 @@ function clearFilters() {
 
 
 
-/* Dropdown MENU */
-var queriesMenu = ['3.2 Redundant Phu',
-		   '3.4 Redundant Mus',
-		   '5.2.1 The dummy entries',
-		  ];
+/* Size and Coverage Dropdown MENU */
 
-var queriesLabel = [
-    queriesMenu0 = [
+var sizeAndCoverageQueriesMenuLabel = [
+    '4.1.1 The size and coverage of SemUs',
+    '4.1.2 The size and coverage of SynUs',
+    '4.1.3 The size and coverage of MUs',
+    '4.1.4 The size and coverage of PUs',
+];
+
+var sizeAndCoverageQueriesLabel = [
+    queriesLabel0 = [
+	'The distribution of all SemUs',
+    ],
+    queriesLabel1 = [
+	'The distribution of all SynUs',
+    ],
+    queriesLabel2 = [
+	'The distribution of all MUs',
+    ],
+    queriesLabel3 = [
+	'The distribution of all PUs',
+    ],
+];
+
+var sizeAndCoverageQueries = [
+    queries0 = [
+	'select pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\')as type, count(*) as num from usem group by pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\') union select  pos , \\\'ALL\\\' as type, count(*) from usem group by pos order by pos asc, num desc, type desc',
+    ],
+    queries1 = [
+	'select pos, BINARY REGEXP_SUBSTR(idUsyn,\\\'^(SYNUTH|SYNU)\\\',1,1,\\\'c\\\') as type, count(*) as num from usyns group by pos, BINARY REGEXP_SUBSTR(idUsyn,\\\'^(SYNUTH|SYNU)\\\',1,1,\\\'c\\\') union select  pos , \\\'ALL\\\' as type, count(*) from usyns group by pos order by pos asc, num desc, type desc',
+    ],
+    queries2 = [
+	'select pos, count(*) as num from mus group by pos order by num DESC',
+    ],
+    queries3 = [
+	'select \\\'presence of phono\\\', count(*) from  phu where phono is not null union select \\\'presence of sampa\\\', count(* ) from  phu where sampa is not null union select \\\'presence of syllables\\\', count(* ) from  phu where syllables is not null',
+    ],
+];
+
+/* Peculiar Entries Dropdown MENU */
+var peculiarEntriesQueriesMenuLabel = [
+    '4.1.1 The dummies entries',
+    '4.1.2 The thamus entries',
+];
+
+var peculiarEntriesQueriesLabel = [
+    queriesLabel0 = [
 	'Coppie PHU ridondanti',
 	'Triple PHU ridondanti',
     ],
-    queriesMenu1 = [
+    queriesLabel1 = [
 	'IF (MUa & MUb have same ginp) THEN',
 	'#3.4.1 - Table YYY. The two analysed MUs appearing in table MUSPHU.',
 	'IF (MUa & MUb have same ginp) ELSE ###IF MUa has ginp NULL (#944)',
     ],
-    queriesMenu2 = [
+    queriesLabel2 = [
 	'#Total count of USemD e USem0D',
+	'#USemD/template (#3616)',
+	'#USemD/trait (#18393)',
+	'#USemD/relation (#8359)',
+	'#USemD/predicate (#2520)',
+	'#UsemD/Usyn (#3924)',
     ],
-    queriesMenu3 = [
-	'Titolo della query'
-    ],
+    queriesLabel3 = [
+	'#Number of SemU Thamus (#28613)',
+	'#Number of SynU Thamus (#27108)',
+	'#Number of MUS associated to Usyn Thamus (#26246)',
+	'#Number of MUS with NULL ginp associated to Usyn Thamus (#18482)',
+	'#Number of Phu connected to MUS connected to SynU Thamus (#31808)',
+	'#Number of SemU Thamus with NULL comment (#12442)',
+	'#Number of SemU Thamus with NULL exemple (#22978)',
+	'#Number of SemU Thamus with NULL definition (#9161)',
+	'#Number of SemU Thamus with pos ADV ending with "mente" (#2368)',
+	'#Number of Proper Nouns in SemU Thamus (#500)'
+
+    ]
 ];
 
-var queries = [
-    queriesSet0 = ['select p2.idPhu, p2.naming, p2.phono from (select p.naming , p.phono, COUNT(*) as c from phu p group by p.naming , p.phono 	HAVING (c=2)) as t, phu p2 where p2.naming = t.naming  and p2.phono = t.phono',
+var peculiarEntriesQueries = [
+    queries0 = ['select p2.idPhu, p2.naming, p2.phono from (select p.naming , p.phono, COUNT(*) as c from phu p group by p.naming , p.phono 	HAVING (c=2)) as t, phu p2 where p2.naming = t.naming  and p2.phono = t.phono',
 		   'select p2.idPhu, p2.naming, p2.phono from (select p.naming , p.phono, COUNT(*) as c	from phu p group by p.naming , p.phono HAVING (c=3)) as t, phu p2 where p2.naming = t.naming and p2.phono = t.phono',
 		   'SELECT * FROM usyns'
 		  ],
-    queriesSet1 = [
+    queries1 = [
 	'select m2.idMus , m.idMus, m.naming, m.pos, COALESCE (m.ginp, \\\'\\\') , COALESCE (m2.ginp, \\\'\\\') from mus m , mus m2  where m.naming = m2.naming  and m.pos = m2.pos  and m2.idMus > m.idMus  and COALESCE (m.ginp, \\\'\\\') = COALESCE (m2.ginp, \\\'\\\')',
 	'select t.duplicate, t.source, mp.pos , mp.morphFeat, mp.idKey , mp2.idKey  from musphu mp, musphu mp2,	(select m2.idMus as duplicate, m.idMus as source from mus m , mus m2 where m.naming = m2.naming and m.pos = m2.pos and m2.idMus > m.idMus  and COALESCE (m.ginp, \\\'\\\') = COALESCE (m2.ginp, \\\'\\\')) as t  where  	t.duplicate = mp.idMus  	and t.source = mp2.idMus and mp.pos  = mp2.pos  and mp.morphFeat = mp2.morphFeat ',
 	'select m2.idMus , m.idMus, m.naming, m.pos, COALESCE (m.ginp, \\\'\\\'), COALESCE (m2.ginp, \\\'\\\') from mus m , mus m2  where m.naming = m2.naming  and m.pos = m2.pos  and m2.idMus > m.idMus  and m.ginp  is NULL  and m2.ginp is NOT NULL ',
     ],
-    queriesSet3  = [
+    queries3  = [
 	'select count(*) from usem u  where  BINARY u.idUsem REGEXP  BINARY \\\'^USem[0-9]?D\\\' ',
+	'select count(*) from usemtemplates ut where ut.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY  \\\'^USemD\\\')',
+	'select count(*) from usemtraits ut where ut.idUsem in (select u.idUsem	from usem u where BINARY  u.idUsem REGEXP  BINARY \\\'^USemD\\\')',
+	'select count(*) from usemrel ur where ur.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY  \\\'^USemD\\\')',
+	'select count(*) from usempredicate up where up.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY  \\\'^USemD\\\')',
+	'select count(*) from usynusem uu where uu.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY  \\\'^USemD\\\')',
     ],
-    queriesSet1set4 =  [
+    queries4 =  [
 	'select * from mus',
     ],
 ];
 
 
-function makeSqlTablesMenu () {
+function makeSizeAndCoverageMenu () {
+
+    makeDropDownMenu ('sizeAndCoverageQueriesMenuId', sizeAndCoverageQueriesMenuLabel,'SizeAndCoverage');
+
+}
+
+function makePeculiarEntriesQueriesMenu () {
+
+    makeDropDownMenu ('peculiarEntriesQueriesMenuId', peculiarEntriesQueriesMenuLabel, 'PeculiarEntries');
+
+}
+
+
+function makeRedundantEntriesMenu () {
     var arrayLabel = [
-	'Redundant PUs',
-	'Redundant MUSPHU',
-	'Redundant MUS',
-	'Redundant USEM',
-	'Redundant USYN'
+	'4.2.1 Redundant Semantic Units',
+	'4.2.2 Redundant Phonological Units ',
+	'4.2.3 Redundant Syntactic Units',
+	'4.2.4 Redundant Morphological Units',
     ];
     
     var arrayQuery = [
-	'select * from RedundantPhu',
-	'select * from RedundantMusPhu',
-	'select * from RedundantMus',
 	'select * from RedundantUsem',
+	'select * from RedundantPhu',
 	'select * from RedundantUsyn',
+	'select * from RedundantMus',
     ];
 
     updateQueriesList(arrayLabel, arrayQuery);
     
 }
 
-function makeQueriesMenu () {
-    makeDropDownMenu ('queriesMenuId', queriesMenu);
-}
 
-function makeDropDownMenu (menuId, array) {
+function makeDropDownMenu (menuId, arrayLabel, name) {
     
-
     var anchor = document.getElementById(menuId);
     var list = document.createElement('div');
     list.setAttribute('id',menuId);
     list.setAttribute('class','dropdown-content');
-    for (var i = 0; i < array.length; i++) {
+    for (var i = 0; i < arrayLabel.length; i++) {
 	var link = document.createElement('a');
 	link.setAttribute('href', '#');
-	link.setAttribute('onclick', 'updateQueriesListByIndex('+i+');return false;');
-        link.appendChild(document.createTextNode(array[i]));
+	link.setAttribute('onclick', 'update'+name+'QueriesListByIndex('+i+');return false;');
+        link.appendChild(document.createTextNode(arrayLabel[i]));
 	list.appendChild(link);
     }
     anchor.replaceWith(list);
@@ -245,7 +348,15 @@ function highlightSelected(obj){
     obj.classList.add('selected');
 }
 
-function updateQueriesListByIndex(index) {
+function updateSizeAndCoverageQueriesListByIndex(index) {
+    updateQueriesListByIndex(sizeAndCoverageQueriesLabel, sizeAndCoverageQueries, index);
+}
+
+function updatePeculiarEntriesQueriesListByIndex(index, array) {
+    updateQueriesListByIndex(peculiarEntriesQueriesLabel, peculiarEntriesQueries, index); 
+}
+
+function updateQueriesListByIndex(queriesLabel, queries, index) {
     var arrayLabel = queriesLabel[index];
     var arrayQuery = queries[index];
 
