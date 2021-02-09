@@ -32,18 +32,18 @@
     <div class="navbar">
       <a href="#" onClick="window.location.reload();">Home</a>
       
-      <div class="dropdown">
-	<button class="dropbtn">Size and Coverage
+      <div id="dropdownSizeAndCoverage" class="dropdown">
+	<button id="dropbtnSizeAndCoverage" class="dropbtn" onclick="toggleContent('sizeAndCoverageQueriesMenuId')">Size and Coverage
 	  <i class="fa fa-caret-down"></i>
 	</button>
-	<div id="sizeAndCoverageQueriesMenuId" class="dropdown-content">
+	<div id="sizeAndCoverageQueriesMenuId" class="dropdown-content" style="display:none">
 	</div>
       </div>
 
       <a href="#" onclick="makeRedundantEntriesMenu();return false;">Redundant Entries</a>
 
-      <div class="dropdown">
-	<button class="dropbtn">Peculiar Entries
+      <div id="dropdownPeculiarEntries" class="dropdown">
+	<button id="dropbtnPeculiarEntries" class="dropbtn" onclick="toggleContent('peculiarEntriesQueriesMenuId')">Peculiar Entries
 	  <i class="fa fa-caret-down"></i>
 	</button>
 	<div id="peculiarEntriesQueriesMenuId" class="dropdown-content">

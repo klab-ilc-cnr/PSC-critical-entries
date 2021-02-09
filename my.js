@@ -104,12 +104,39 @@ window.onload = function() {
 //    updateQueryList(0);
     //makeSqlTablesMenu();
 
-    //costrisco i dropdown menu
+    var drpdwnBtn = document.getElementsByClassName('dropdown');
+    for(var i = 0; i < drpdwnBtn.length; i++){
+	drpdwnBtn[i].addEventListener('click', showHideOther, false);
+    }
+
+    
+    //costruisco i dropdown menu
     makeSizeAndCoverageMenu();
     makePeculiarEntriesQueriesMenu();
 
 } //window.onload() END
 
+
+function showHideOther(e) {
+//    console.log("hide " + e.currentTarget.id);
+    var list = document.getElementsByClassName("show");
+    while(list.length) {
+//	console.log("showHideOther "+list[0].id);
+	list[0].classList.remove('show');
+    }
+    e.currentTarget.classList.add = "show";
+//    console.log(e.currentTarget.getElementsByClassName("dropdown-content")[0]);
+    e.currentTarget.getElementsByClassName("dropdown-content")[0].classList.add("show");
+}
+
+window.onclick = function(e) {
+    if (!e.target.matches('.dropbtn')) {
+	var list = document.getElementsByClassName("show");
+	while(list.length) {
+	    list[0].classList.remove('show');
+	}
+    }
+}
 
 function editorSetContent(query){
     var editor = document.querySelector('.CodeMirror').CodeMirror;
@@ -257,7 +284,7 @@ var peculiarEntriesQueries = [
 
 function makeSizeAndCoverageMenu () {
 
-    makeDropDownMenu ('sizeAndCoverageQueriesMenuId', sizeAndCoverageQueriesMenuLabel,'SizeAndCoverage');
+    makeDropDownMenu ('sizeAndCoverageQueriesMenuId', sizeAndCoverageQueriesMenuLabel, 'SizeAndCoverage');
 
 }
 
@@ -286,6 +313,7 @@ function makeRedundantEntriesMenu () {
     updateQueriesList(arrayLabel, arrayQuery);
     
 }
+
 
 
 function makeDropDownMenu (menuId, arrayLabel, name) {
@@ -330,6 +358,22 @@ function makeUL(arrayLabel, arrayQuery) {
 
     // Finally, return the constructed list:
     return list;
+}
+
+function showHideMenu(id) {
+    console.log(id);
+    console.log(document.getElementById(id));
+    var el = document.getElementById(id);
+    if (el.style.display === "none" ) {
+	el.style.display = "block";
+    } else {
+	el.style.display = "none";
+    }
+}
+
+function toggleContent(id) {
+    console.log("toggleContent id: " + id);
+    document.getElementById(id).classList.toggle("show");
 }
 
 /* Menu items style class setter */
