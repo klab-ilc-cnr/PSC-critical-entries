@@ -104,9 +104,10 @@ window.onload = function() {
 //    updateQueryList(0);
     //makeSqlTablesMenu();
 
+    
     var drpdwnBtn = document.getElementsByClassName('dropdown');
     for(var i = 0; i < drpdwnBtn.length; i++){
-	drpdwnBtn[i].addEventListener('click', showHideOther, false);
+	drpdwnBtn[i].addEventListener('click', showHideOtherMenu, false);
     }
 
     
@@ -117,7 +118,18 @@ window.onload = function() {
 } //window.onload() END
 
 
-function showHideOther(e) {
+window.onclick = function(e) {
+    //to manage dropdown menus visibility (joined to showHideOther() )
+    if (!e.target.matches('.dropbtn')) {
+	var list = document.getElementsByClassName("show");
+	while(list.length) {
+	    list[0].classList.remove('show');
+	}
+    }
+}
+
+//Show menu under the clicked button and hide the other ones
+function showHideOtherMenu(e) {
 //    console.log("hide " + e.currentTarget.id);
     var list = document.getElementsByClassName("show");
     while(list.length) {
@@ -129,14 +141,6 @@ function showHideOther(e) {
     e.currentTarget.getElementsByClassName("dropdown-content")[0].classList.add("show");
 }
 
-window.onclick = function(e) {
-    if (!e.target.matches('.dropbtn')) {
-	var list = document.getElementsByClassName("show");
-	while(list.length) {
-	    list[0].classList.remove('show');
-	}
-    }
-}
 
 function editorSetContent(query){
     var editor = document.querySelector('.CodeMirror').CodeMirror;
