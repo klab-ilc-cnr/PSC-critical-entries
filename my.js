@@ -7,11 +7,10 @@ window.onload = function() {
 	mode: "text/x-mysql",
 	theme: "idea", 
 	lineWrapping: false,
-	setSize: (200,200)
+//	readOnly: true,
     });
-    
-    //editor.getDoc().setValue(sqlFormatter.format("select * from mus where idMus like 'MUScast%'"));
 
+    editor.setSize('100%','auto');
 
     //TABULATOR table result init
     var table = new Tabulator("#example-table", {
@@ -148,7 +147,8 @@ function editorSetContent(query){
 
     /* REF: https://github.com/zeroturnaround/sql-formatter */
     var sqlString = sqlFormatter.format(query, {  language: 'sql', uppercase: true, indent: '   '});
-    sqlString =  sqlString.replace(/,\n\s*/g,', ');
+    sqlString =  sqlString.replace(/([A-Z]+)\n\s*/g,'$1 ');
+//    sqlString =  sqlString.replace(/,\n\s*/g,', ');
     editor.setValue(sqlString);
 
 }
