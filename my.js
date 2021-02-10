@@ -5,7 +5,8 @@ window.onload = function() {
     var editor = new CodeMirror.fromTextArea(document.getElementById("myTextarea"), {
 	lineNumbers: true, 
 	mode: "text/x-mysql",
-	theme: "idea", 
+//	theme: "idea", 
+	theme: "ttcn", 
 	lineWrapping: false,
 //	readOnly: true,
     });
@@ -148,6 +149,8 @@ function editorSetContent(query){
     /* REF: https://github.com/zeroturnaround/sql-formatter */
     var sqlString = sqlFormatter.format(query, {  language: 'sql', uppercase: true, indent: '   '});
     sqlString =  sqlString.replace(/([A-Z]+)\n\s*/g,'$1 ');
+    sqlString =  sqlString.replace(/\nUNION/g,'UNION');
+    sqlString =  sqlString.replace(/(?!\n)UNION/g,'\nUNION\n');
 //    sqlString =  sqlString.replace(/,\n\s*/g,', ');
     editor.setValue(sqlString);
 
