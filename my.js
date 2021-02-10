@@ -30,10 +30,11 @@ window.onload = function() {
 	],*/
 	placeholder:"No Data Available", //display message to user on empty table
 	layout:"fitColumns",
-//	layout:"fitDataStretch",
+//	layout:"fitDataTable",
 	paginationSize:20,
 	height:"500px",
 	width:"1500px",
+	layoutColumnsOnNewData:true,
 	pagination:"local", //enable local pagination.
 	paginationSizeSelector:[10, 20, 50, 100, 1000, 10000], //enable page size select element with these options
 	ajaxResponse:function(url, params, response){
