@@ -60,7 +60,7 @@ window.onload = function() {
 
 	autoColumnsDefinitions:function(definitions){
             //definitions - array of column definition objects
-	    console.log(definitions);
+//	    console.log(definitions);
             definitions.forEach((column) => {
 		column.headerFilter = true; // add header filter to every column
 		/*		field: "id"
@@ -366,8 +366,8 @@ function makeUL(arrayLabel, arrayQuery) {
 }
 
 function showHideMenu(id) {
-    console.log(id);
-    console.log(document.getElementById(id));
+//    console.log(id);
+//    console.log(document.getElementById(id));
     var el = document.getElementById(id);
     if (el.style.display === "none" ) {
 	el.style.display = "block";
@@ -377,7 +377,7 @@ function showHideMenu(id) {
 }
 
 function toggleContent(id) {
-    console.log("toggleContent id: " + id);
+//    console.log("toggleContent id: " + id);
     document.getElementById(id).classList.toggle("show");
 }
 
