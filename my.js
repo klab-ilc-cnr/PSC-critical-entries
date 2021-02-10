@@ -220,7 +220,7 @@ var sizeAndCoverageQueries = [
 	'select pos, count(*) as num from mus group by pos order by num DESC',
     ],
     queries3 = [
-	'select \\\'presence of phono\\\', count(*) from  phu where phono is not null union select \\\'presence of sampa\\\', count(* ) from  phu where sampa is not null union select \\\'presence of syllables\\\', count(* ) from  phu where syllables is not null',
+	'select \\\'Total count\\\', count(*) as count from  phu union select \\\'Presence of phono\\\', count(*) from  phu where phono is not null union select \\\'Presence of sampa\\\', count(*) from  phu where sampa is not null union select \\\'Presence of syllables\\\', count(*) from  phu where syllables is not null',
     ],
 ];
 
