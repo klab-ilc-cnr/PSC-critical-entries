@@ -11,7 +11,7 @@ window.onload = function() {
 //	readOnly: true,
     });
 
-    editor.setSize('100%','auto');
+//    editor.setSize('100%','auto');
 
     //TABULATOR table result init
     var table = new Tabulator("#example-table", {
