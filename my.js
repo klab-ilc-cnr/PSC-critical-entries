@@ -5,9 +5,9 @@ window.onload = function() {
     var editor = new CodeMirror.fromTextArea(document.getElementById("myTextarea"), {
 	lineNumbers: true, 
 	mode: "text/x-mssql",
-//	theme: "cobalt", 
+	theme: "cobalt", 
 //	theme: "material-palenight", 
-	theme: "lucario", 
+//	theme: "lucario", 
 //	theme: "idea", 
 	lineWrapping: false,
 //	readOnly: true,
