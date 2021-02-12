@@ -4,9 +4,11 @@ window.onload = function() {
     //CODEMIRROR Editor init
     var editor = new CodeMirror.fromTextArea(document.getElementById("myTextarea"), {
 	lineNumbers: true, 
-	mode: "text/x-mysql",
+	mode: "text/x-mssql",
+//	theme: "cobalt", 
+//	theme: "material-palenight", 
+	theme: "lucario", 
 //	theme: "idea", 
-	theme: "ttcn", 
 	lineWrapping: false,
 //	readOnly: true,
     });
@@ -129,6 +131,14 @@ window.onclick = function(e) {
     }
 }
 
+function selectTheme(t) {
+    var input = document.getElementById("select");
+    var theme = input.options[input.selectedIndex].textContent;
+    var editor = document.querySelector('.CodeMirror').CodeMirror;
+    editor.setOption("theme", theme);
+}
+
+
 //Show menu under the clicked button and hide the other ones
 function showHideOtherMenu(e) {
 //    console.log("hide " + e.currentTarget.id);
@@ -214,10 +224,10 @@ var sizeAndCoverageQueriesLabel = [
 
 var sizeAndCoverageQueries = [
     queries0 = [
-	'select pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\')as type, count(*) as num from usem group by pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\') union select  pos , \\\'ALL\\\' as type, count(*) from usem group by pos order by pos asc, num desc, type desc',
+	'select pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\')as type, count(*) as num from usem group by pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\') union select  pos , \\\'ALL\\\' as type, count(*) from usem group by pos order by pos asc, num desc, type asc',
     ],
     queries1 = [
-	'select pos, BINARY REGEXP_SUBSTR(idUsyn,\\\'^(SYNUTH|SYNU)\\\',1,1,\\\'c\\\') as type, count(*) as num from usyns group by pos, BINARY REGEXP_SUBSTR(idUsyn,\\\'^(SYNUTH|SYNU)\\\',1,1,\\\'c\\\') union select  pos , \\\'ALL\\\' as type, count(*) from usyns group by pos order by pos asc, num desc, type desc',
+	'select pos, BINARY REGEXP_SUBSTR(idUsyn,\\\'^(SYNUTH|SYNU)\\\',1,1,\\\'c\\\') as type, count(*) as num from usyns group by pos, BINARY REGEXP_SUBSTR(idUsyn,\\\'^(SYNUTH|SYNU)\\\',1,1,\\\'c\\\') union select  pos , \\\'ALL\\\' as type, count(*) from usyns group by pos order by pos asc, num desc, type asc',
     ],
     queries2 = [
 	'select pos, count(*) as num from mus group by pos order by num DESC',
