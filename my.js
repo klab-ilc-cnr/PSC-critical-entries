@@ -201,10 +201,10 @@ function clearFilters() {
 /* Size and Coverage Dropdown MENU */
 
 var sizeAndCoverageQueriesMenuLabel = [
-    '4.1.1 The size and coverage of SemUs',
-    '4.1.2 The size and coverage of SynUs',
-    '4.1.3 The size and coverage of MUs',
-    '4.1.4 The size and coverage of PUs',
+    'The size and coverage of SemUs',
+    'The size and coverage of SynUs',
+    'The size and coverage of MUs',
+    'The size and coverage of PUs',
 ];
 
 var sizeAndCoverageQueriesLabel = [
@@ -239,8 +239,8 @@ var sizeAndCoverageQueries = [
 
 /* Peculiar Entries Dropdown MENU */
 var peculiarEntriesQueriesMenuLabel = [
-    '4.1.1 The dummies entries',
-    '4.1.2 The thamus entries',
+    'The dummies entries',
+    'The thamus entries',
 ];
 
 var peculiarEntriesQueriesLabel = [
@@ -290,9 +290,9 @@ var peculiarEntriesQueries = [
 	'select count(*) from usem u  where  BINARY u.idUsem REGEXP  BINARY \\\'^USem[0-9]?D\\\' ',
 	'select count(*) from usemtemplates ut where ut.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY  \\\'^USemD\\\')',
 	'select count(*) from usemtraits ut where ut.idUsem in (select u.idUsem	from usem u where BINARY  u.idUsem REGEXP  BINARY \\\'^USemD\\\')',
-	'select count(*) from usemrel ur where ur.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY  \\\'^USemD\\\')',
-	'select count(*) from usempredicate up where up.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY  \\\'^USemD\\\')',
-	'select count(*) from usynusem uu where uu.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY  \\\'^USemD\\\')',
+	'select count(*) from usemrel ur where ur.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY \\\'^USemD\\\')',
+	'select count(*) from usempredicate up where up.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY \\\'^USemD\\\')',
+	'select count(*) from usynusem uu where uu.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY \\\'^USemD\\\')',
     ],
     queries4 =  [
 	'select * from mus',
@@ -315,10 +315,12 @@ function makePeculiarEntriesQueriesMenu () {
 
 function makeRedundantEntriesMenu () {
     var arrayLabel = [
-	'4.2.1 Redundant Semantic Units',
-	'4.2.2 Redundant Phonological Units ',
-	'4.2.3 Redundant Syntactic Units',
-	'4.2.4 Redundant Morphological Units',
+	'Redundant Semantic Units',
+	'Redundant Phonological Units ',
+	'Redundant Syntactic Units',
+	'Redundant Morphological Units',
+	'Forms in MUSPHU linked to redundant PUs',
+	'Duplicate rows in MUSPHU'
     ];
     
     var arrayQuery = [
@@ -326,6 +328,8 @@ function makeRedundantEntriesMenu () {
 	'select * from RedundantPhu',
 	'select * from RedundantUsyn',
 	'select * from RedundantMus',
+	'select * from RedundantMusPhu',
+	'select * from DuplicateMUSPHU',
     ];
 
     updateQueriesList(arrayLabel, arrayQuery);
