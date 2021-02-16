@@ -8,7 +8,7 @@ $userName = $config['username'];
 $password = $config['password'];
 $dbName = $config['dbname'];
 
-//file_put_contents('php://stderr', print_r($_POST, TRUE));
+file_put_contents('php://stderr', print_r($_POST, TRUE));
 
 $sqlcommand = $_POST['query'];
 // Create database connection
@@ -55,6 +55,7 @@ if (json_encode($tabledata) === false){
     echo json_encode(array('type' => 'ERROR', 'message' => json_last_error_msg()));
 
 } else {
+    //    file_put_contents('php://stderr', "ERR: " .  json_encode($tabledata). PHP_EOL);
     header('Content-Type: application/json');
     echo json_encode($tabledata)."\n";
 }
