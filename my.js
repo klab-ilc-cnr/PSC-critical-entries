@@ -70,21 +70,21 @@ window.onload = function() {
 				headerFilter: true
 				sorter: "number"
 				title:"id"*/
-		if(column.field=="id") {
+		if(column.field==="id") {
 		    column.visible=false;
 		}
-		if(column.sorter=="string") {
+		if(column.sorter==="string") {
 //		    column.headerFilterFunc="starts";
 		}
-		if(column.sorter=="alphanum") {
+		if(column.sorter==="alphanum") {
 //		    column.headerFilterFunc="starts";
 		}
 		
-		if(column.sorter=="number" ) {
+		if(column.sorter==="number" ) {
 		    column.headerFilterFunc="=";
 		}
 
-		if(column.field=="count(*)") {
+		if(column.field.toLowerCase().startsWith("count")) {
 		    column.headerFilter=false;
 		}
 		//column.headerFilterFunc = "starts";
@@ -166,7 +166,7 @@ function editorSetContent(query){
 
 }
 
-function runQuery(query) {
+function runQuery() {
     //remove any error message
     var el = document.getElementById("querystatus");
     el.innerHTML ="";
@@ -245,54 +245,86 @@ var peculiarEntriesQueriesMenuLabel = [
 
 var peculiarEntriesQueriesLabel = [
     queriesLabel0 = [
+	'#Total count of Dummies',
+	'#USemD/template',
+	'#USemD/trait',
+	'#USemD/relation',
+	'#USemD/predicate',
+	'#UsemD/Usyn',
+    ],
+    queriesLabel1 = [
+	'#Number of SemU Thamus',
+	'#Number of SynU Thamus',
+	'#Number of MUS associated to Usyn Thamus',
+	'#Number of MUS with NULL ginp associated to Usyn Thamus',
+	'#Number of Phu connected to MUS connected to SynU Thamus',
+	'#Number of SemU Thamus with NULL comment',
+	'#Number of SemU Thamus with NULL exemple',
+	'#Number of SemU Thamus with NULL definition',
+	'#Number of SemU Thamus with pos ADV ending with "mente"',
+	'#Number of Proper Nouns in SemU Thamus',
+	'#SYNUTH with a valid descriptionL',
+	'#SYNUTH with a valid framesetL',
+	'#Number of SynU con GINP nel comment',
+	'#Number of Usem Thamus with at least one template',
+	'#Number of Usem Thamus with two templates',
+	'#USem Thamus in relation ISA with another USem',
+	'#USem Thamus in relation with USem Thamus',
+	'#USYNUSEM tra syunTH e semuTH con idcorresp a NULL',
+	'#USYNUSEM tra syunTH e semuTH con idcorresp 70'
+    ],
+    queriesLabel2 = [
 	'Coppie PHU ridondanti',
 	'Triple PHU ridondanti',
     ],
-    queriesLabel1 = [
+    queriesLabel3 = [
 	'IF (MUa & MUb have same ginp) THEN',
 	'#3.4.1 - Table YYY. The two analysed MUs appearing in table MUSPHU.',
 	'IF (MUa & MUb have same ginp) ELSE ###IF MUa has ginp NULL (#944)',
-    ],
-    queriesLabel2 = [
-	'#Total count of USemD e USem0D',
-	'#USemD/template (#3616)',
-	'#USemD/trait (#18393)',
-	'#USemD/relation (#8359)',
-	'#USemD/predicate (#2520)',
-	'#UsemD/Usyn (#3924)',
-    ],
-    queriesLabel3 = [
-	'#Number of SemU Thamus (#28613)',
-	'#Number of SynU Thamus (#27108)',
-	'#Number of MUS associated to Usyn Thamus (#26246)',
-	'#Number of MUS with NULL ginp associated to Usyn Thamus (#18482)',
-	'#Number of Phu connected to MUS connected to SynU Thamus (#31808)',
-	'#Number of SemU Thamus with NULL comment (#12442)',
-	'#Number of SemU Thamus with NULL exemple (#22978)',
-	'#Number of SemU Thamus with NULL definition (#9161)',
-	'#Number of SemU Thamus with pos ADV ending with "mente" (#2368)',
-	'#Number of Proper Nouns in SemU Thamus (#500)'
-
     ]
 ];
 
 var peculiarEntriesQueries = [
-    queries0 = ['select p2.idPhu, p2.naming, p2.phono from (select p.naming , p.phono, COUNT(*) as c from phu p group by p.naming , p.phono 	HAVING (c=2)) as t, phu p2 where p2.naming = t.naming  and p2.phono = t.phono',
-		   'select p2.idPhu, p2.naming, p2.phono from (select p.naming , p.phono, COUNT(*) as c	from phu p group by p.naming , p.phono HAVING (c=3)) as t, phu p2 where p2.naming = t.naming and p2.phono = t.phono',
-		   'SELECT * FROM usyns'
-		  ],
-    queries1 = [
-	'select m2.idMus , m.idMus, m.naming, m.pos, COALESCE (m.ginp, \\\'\\\') , COALESCE (m2.ginp, \\\'\\\') from mus m , mus m2  where m.naming = m2.naming  and m.pos = m2.pos  and m2.idMus > m.idMus  and COALESCE (m.ginp, \\\'\\\') = COALESCE (m2.ginp, \\\'\\\')',
-	'select t.duplicate, t.source, mp.pos , mp.morphFeat, mp.idKey , mp2.idKey  from musphu mp, musphu mp2,	(select m2.idMus as duplicate, m.idMus as source from mus m , mus m2 where m.naming = m2.naming and m.pos = m2.pos and m2.idMus > m.idMus  and COALESCE (m.ginp, \\\'\\\') = COALESCE (m2.ginp, \\\'\\\')) as t  where  	t.duplicate = mp.idMus  	and t.source = mp2.idMus and mp.pos  = mp2.pos  and mp.morphFeat = mp2.morphFeat ',
-	'select m2.idMus , m.idMus, m.naming, m.pos, COALESCE (m.ginp, \\\'\\\'), COALESCE (m2.ginp, \\\'\\\') from mus m , mus m2  where m.naming = m2.naming  and m.pos = m2.pos  and m2.idMus > m.idMus  and m.ginp  is NULL  and m2.ginp is NOT NULL ',
-    ],
-    queries3  = [
-	'select count(*) from usem u  where  BINARY u.idUsem REGEXP  BINARY \\\'^USem[0-9]?D\\\' ',
+    queries0 = [
+		'select count(*) from usem u  where  BINARY u.idUsem REGEXP  BINARY \\\'^USem0?D\\\' ',
 	'select count(*) from usemtemplates ut where ut.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY  \\\'^USemD\\\')',
 	'select count(*) from usemtraits ut where ut.idUsem in (select u.idUsem	from usem u where BINARY  u.idUsem REGEXP  BINARY \\\'^USemD\\\')',
 	'select count(*) from usemrel ur where ur.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY \\\'^USemD\\\')',
 	'select count(*) from usempredicate up where up.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY \\\'^USemD\\\')',
 	'select count(*) from usynusem uu where uu.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY \\\'^USemD\\\')',
+		  ],
+
+    querie2 = ['select count(*) from usem where idUsem REGEXP \\\'^USemTH\\\'',
+	       'select count(*) from usyns where idUsyn REGEXP \\\'^SYNUTH\\\'',
+	       'select count(distinct idUms) from usyns where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\'',
+	       'select count(*) from mus m where m.idMus in (select u.idUms from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\') and m.ginp is NULL',
+	       'select count(distinct idPhu) from musphu where idMus in (select m.idMus from mus m where m.idMus in (select u.idUms from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\') )',
+	       'select count(*) from usem u where u.idUsem REGEXP \\\'^USemTH\\\' and u.comment is NULL',
+	       'select count(*) from usem u where u.idUsem REGEXP \\\'^USemTH\\\' and u.exemple is NULL',
+	       'select count(*) from usem u where u.idUsem REGEXP \\\'^USemTH\\\' and u.definition is NULL',
+	       'select count(*) from usem u where u.idUsem REGEXP \\\'^USemTH\\\' and u.pos = \\\'ADV\\\' and u.naming REGEXP \\\'mente$\\\'',
+	       'select count(*) from usem u where u.idUsem REGEXP \\\'^USemTH\\\' and u.pos = \\\'NP\\\'',
+	       'select * from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and descriptionL is not NULL  and descriptionL <> ""',
+	       'select * from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and framesetL is not NULL  and framesetL <> ""',
+	       'select count(idUsyn) from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and BINARY u.comment REGEXP BINARY \\\'^GINP\\\\\\\\d+$\\\'',
+	       'select count(DISTINCT idUsem) from usemtemplates  where BINARY idUsem REGEXP BINARY \\\'^USemTH\\\'',
+	       'select idUsem, count(*) from usemtemplates where BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' group by idUsem  HAVING count(*) = 2',
+	       'select count(idUsem) from usemrel where idUsem REGEXP \\\'USemTH\\\' and idRSem = \\\'R146\\\'',
+	       'select count(idUsem) from usemrel where BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' and BINARY idUsemTarget  REGEXP BINARY \\\'^USemTH\\\'',
+	       'select count(*) from usynusem  where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' and idCorresp is NULL',
+	       'select count(*) from usynusem u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' and u.idCorresp = 70',
+	      ],
+    
+    
+    querie1 = [
+	'select m2.idMus , m.idMus, m.naming, m.pos, COALESCE (m.ginp, \\\'\\\') , COALESCE (m2.ginp, \\\'\\\') from mus m , mus m2  where m.naming = m2.naming  and m.pos = m2.pos  and m2.idMus > m.idMus  and COALESCE (m.ginp, \\\'\\\') = COALESCE (m2.ginp, \\\'\\\')',
+	'select t.duplicate, t.source, mp.pos , mp.morphFeat, mp.idKey , mp2.idKey  from musphu mp, musphu mp2,	(select m2.idMus as duplicate, m.idMus as source from mus m , mus m2 where m.naming = m2.naming and m.pos = m2.pos and m2.idMus > m.idMus  and COALESCE (m.ginp, \\\'\\\') = COALESCE (m2.ginp, \\\'\\\')) as t  where t.duplicate = mp.idMus and t.source = mp2.idMus and mp.pos = mp2.pos and mp.morphFeat = mp2.morphFeat ',
+	'select m2.idMus , m.idMus, m.naming, m.pos, COALESCE (m.ginp, \\\'\\\'), COALESCE (m2.ginp, \\\'\\\') from mus m , mus m2  where m.naming = m2.naming and m.pos = m2.pos and m2.idMus > m.idMus and m.ginp is NULL and m2.ginp is NOT NULL ',
+    ],
+    queries3  = [
+'select p2.idPhu, p2.naming, p2.phono from (select p.naming , p.phono, COUNT(*) as c from phu p group by p.naming , p.phono 	HAVING (c=2)) as t, phu p2 where p2.naming = t.naming  and p2.phono = t.phono',
+		   'select p2.idPhu, p2.naming, p2.phono from (select p.naming , p.phono, COUNT(*) as c	from phu p group by p.naming , p.phono HAVING (c=3)) as t, phu p2 where p2.naming = t.naming and p2.phono = t.phono',
+		   'SELECT * FROM usyns'
     ],
     queries4 =  [
 	'select * from mus',
@@ -370,7 +402,7 @@ function makeUL(arrayLabel, arrayQuery) {
 	var newlink = document.createElement('a');
 	newlink.setAttribute('href', '#');
 	var index = i + 1;
-	newlink.setAttribute('onclick', "editorSetContent('"+arrayQuery[i]+"');return false;");
+	newlink.setAttribute('onclick', "editorSetContent('"+arrayQuery[i]+"');runQuery();return false;");
         // Set its contents:
         newlink.appendChild(document.createTextNode(arrayLabel[i]));
         item.appendChild(newlink);
