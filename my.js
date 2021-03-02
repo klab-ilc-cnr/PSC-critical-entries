@@ -1,8 +1,12 @@
+//TextArea for CodeMirror
+const sqlTextarea = "sqlTextarea";
+//const pseudocodeTextarea = "pseudocodeTextarea";
+
 
 window.onload = function() {
 
     //CODEMIRROR Editor init
-    var editor = new CodeMirror.fromTextArea(document.getElementById("myTextarea"), {
+    var editor = new CodeMirror.fromTextArea(document.getElementById(sqlTextarea), {
 	lineNumbers: true, 
 	mode: "text/x-mssql",
 	theme: "cobalt", 
@@ -13,6 +17,14 @@ window.onload = function() {
 //	readOnly: true,
     });
 
+/*    var pseudoCodeEditor = new CodeMirror.fromTextArea(document.getElementById(pseudocodeTextarea), {
+	lineNumbers: false, 
+	mode: "text/x-java",
+	theme: "idea", 
+	lineWrapping: false,
+	readOnly: false,
+    });
+  */  
 //    editor.setSize('100%','auto');
 
     //TABULATOR table result init
@@ -134,8 +146,10 @@ window.onclick = function(e) {
 function selectTheme(t) {
     var input = document.getElementById("select");
     var theme = input.options[input.selectedIndex].textContent;
-    var editor = document.querySelector('.CodeMirror').CodeMirror;
-    editor.setOption("theme", theme);
+//    var editor = document.querySelector('.CodeMirror').CodeMirror;
+    var editor = document.querySelector('#'.concat(sqlTextarea)).nextSibling.CodeMirror;
+//    console.log(editor);
+   editor.setOption("theme", theme);
 }
 
 
@@ -153,17 +167,39 @@ function showHideOtherMenu(e) {
 }
 
 
-function editorSetContent(query){
-    var editor = document.querySelector('.CodeMirror').CodeMirror;
+function sqlEditorSetContent(query) {
 
     /* REF: https://github.com/zeroturnaround/sql-formatter */
     var sqlString = sqlFormatter.format(query, {  language: 'sql', uppercase: true, indent: '   '});
     sqlString =  sqlString.replace(/([A-Z]+)\n\s*/g,'$1 ');
     sqlString =  sqlString.replace(/\nUNION/g,'UNION');
     sqlString =  sqlString.replace(/(?!\n)UNION/g,'\nUNION\n');
-//    sqlString =  sqlString.replace(/,\n\s*/g,', ');
-    editor.setValue(sqlString);
+//    console.log("sqlEditorSetContent: " +sqlString);
+    editorSetContent(sqlTextarea,sqlString);
+    
+}
 
+function pseudocodeSetContent(content) {
+    if (typeof content !== "undefined") {
+	var el = document.getElementById("code");
+//	console.log("pseudocodeSetContent: " + el);
+//	console.log("pseudocodeSetContent: " + content);
+	el.innerHTML = PR.prettyPrintOne(content);
+	//    PR.prettyPrint(); //non funziona
+	switchOnVisibilityElementId("code"); 
+    } else  {
+	switchOffVisibilityElementId("code");
+    }
+}
+
+function codeEditorSetContent(content) {
+    editorSetContent(pseudocodeTextarea,content);
+}
+
+function editorSetContent(textarea,content){
+
+    var editor = document.querySelector('#'.concat(textarea)).nextSibling.CodeMirror;
+    editor.setValue(content);
 }
 
 function runQuery() {
@@ -171,8 +207,9 @@ function runQuery() {
     var el = document.getElementById("querystatus");
     el.innerHTML ="";
     el.className = "success";
-    var editor = document.querySelector('.CodeMirror').CodeMirror;
-    //alert(editor.getValue());
+  //  var editor = document.querySelector('.CodeMirror').CodeMirror;
+    var editor = document.querySelector('#'.concat(sqlTextarea)).nextSibling.CodeMirror;
+   //alert(editor.getValue());
     var table = Tabulator.prototype.findTable('#example-table')[0];
     table.setData("DB.php", {"query":editor.getValue()},"POST");
 }
@@ -201,6 +238,7 @@ function clearFilters() {
 /* Size and Coverage Dropdown MENU */
 
 var sizeAndCoverageQueriesMenuLabel = [
+    'The size and coverage of PSC',
     'The size and coverage of SemUs',
     'The size and coverage of SynUs',
     'The size and coverage of MUs',
@@ -208,33 +246,135 @@ var sizeAndCoverageQueriesMenuLabel = [
 ];
 
 var sizeAndCoverageQueriesLabel = [
+
     queriesLabel0 = [
-	'The distribution of all SemUs',
+	'The distribution of all Entries in PSC',
     ],
+
     queriesLabel1 = [
-	'The distribution of all SynUs',
+	'The distribution of all SemUs wrt to POS (column “Total”) and the distribution provided per class ...',
+	'The distribution of SemUs’ POS provided per class',
+	'The presence of Definition',
+	'The presence of Example',
+	'The presence of Comment',
+	'The presence of SynU',
+	'The presence of trait',
+	'The presence of template',
+	'The presence of predicate',
+	'The presence of relation',
+	'The average number of SynUs',
+	'The average number of traits',
+	'The average number of templates',
+	'The average number of predicates',
+	'The average number of relations',
     ],
+
     queriesLabel2 = [
-	'The distribution of all MUs',
+	'The distribution of all SynUs',
+	'The presence of POS',
+	'The presence of MUs',
+	'The presence of SemUs',
+	'The presence of Comment',
+	'The presence of Example',
+	'The presence of Description',
+	'The presence of DescriptionL',
+	'The presence of FramesetL',
     ],
+
     queriesLabel3 = [
+	'The distribution of all MUs',
+	'The presence of POS',
+	'The presence of ginp',
+	'The presence of PUs',
+	'The distribution of all Musphu with the POS and percentage',
+    ],
+
+    queriesLabel4 = [
 	'The distribution of all PUs',
     ],
+
 ];
 
 var sizeAndCoverageQueries = [
+
     queries0 = [
-	'select pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\')as type, count(*) as num from usem group by pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\') union select  pos , \\\'ALL\\\' as type, count(*) from usem group by pos order by pos asc, num desc, type asc',
+	'SELECT \\\'SemUs\\\', COUNT(*) AS Num FROM usem UNION SELECT \\\'SynUs\\\', COUNT(*) FROM usyns UNION SELECT \\\'MUs\\\', COUNT(*) FROM mus UNION SELECT \\\'PUs\\\', COUNT(*) FROM phu union select \\\'MusPhu\\\', count(*) FROM musphu union select \\\'usynusem\\\', count(*) from usynusem union select \\\'usempredicate\\\', count(*) from usempredicate union select \\\'usemrel\\\', count(*) from usemrel union select \\\'usemtraits\\\', count(*) from usemtraits union select \\\'usemtemplates\\\', count(*) from usemtemplates',
+ ],
+
+ queries1 = [
+      'with totals as (select u2.pos, count(*) as cnt 	 from usem u2 	 group by u2.pos), 	tot as ( 		select count(*) as cnt 	 	from usem 	 	) select \\\'Total\\\' as type, u.pos, count(*) as num, ANY_VALUE(concat(round(( COUNT(*)/tot.cnt * 100 ),2),\\\'%\\\')) as perc from usem u, tot group by u.pos union select \\\'Standard\\\' as type, u.pos, count(*) as num, ANY_VALUE(concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from usem u, totals where u.pos = totals.pos and BINARY u.idUsem REGEXP BINARY \\\'^USem(?!TH|D|0D)\\\' group by u.pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^(USem)\\\',1,1,\\\'c\\\') union	 select \\\'Thamus\\\' as type, u.pos, count(*) as num, ANY_VALUE(concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from usem u, totals where u.pos = totals.pos and BINARY u.idUsem REGEXP BINARY \\\'^(USemTH)\\\' group by u.pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^(USemTH)\\\',1,1,\\\'c\\\') union	 select \\\'Dummy\\\' as type, u.pos, count(*) as num, ANY_VALUE(concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from usem u, totals where u.pos = totals.pos and BINARY u.idUsem REGEXP BINARY \\\'^(USem0?D)\\\' group by u.pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^USem\\\',1,1,\\\'c\\\') order by type desc, num desc',
+      
+      'with totals as (select count(*) as cnt 	 from usem 	 ), 	totalStd as (select count(*) as cnt 	 from usem 	 where BINARY idUsem REGEXP BINARY \\\'^USem(?!TH|D|0D)\\\' 	 ), 	 totalTh as (select count(*) as cnt 	 from usem 	 where BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' 	 ), 	 totalD as (select count(*) as cnt 	 from usem 	 where BINARY idUsem REGEXP BINARY \\\'^USem0?D\\\' 	 ) 	 select \\\'Total\\\' as type, u.pos, count(*) as num, ANY_VALUE(concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from usem u, totals group by u.pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^USem\\\',1,1,\\\'c\\\') union select \\\'Standard\\\' as type, u.pos, count(*) as num, ANY_VALUE(concat(round(( COUNT(*)/totalStd.cnt * 100 ),2),\\\'%\\\')) as perc from usem u, totalStd where BINARY u.idUsem REGEXP BINARY \\\'^USem(?!TH|D|0D)\\\' group by u.pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^USem\\\',1,1,\\\'c\\\') union select \\\'Thamus\\\' as type, u.pos, count(*) as num, ANY_VALUE(concat(round(( COUNT(*)/totalTh.cnt * 100 ),2),\\\'%\\\')) as perc from usem u, totalTh where BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' group by u.pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^USemTH\\\',1,1,\\\'c\\\') union	 select \\\'Dummy\\\' as type, u.pos, count(*) as num, ANY_VALUE(concat(round(( COUNT(*)/totalD.cnt * 100 ),2),\\\'%\\\')) as perc from usem u, totalD where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\' group by u.pos, BINARY REGEXP_SUBSTR(idUsem ,\\\'^USem\\\',1,1,\\\'c\\\')',
+
+      'with total as (select count(*) as cnt 	 from usem u2 	 ), 	 totals as ( 	select BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as cnt 	from usem u2 	group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') 	) 	 select \\\'Definition\\\', \\\'All\\\', count(*) as num, total.cnt as total, ANY_VALUE(concat(round(( COUNT(*)/total.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , total where u.definition is not null UNION 	 select \\\'Definition\\\', BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as num, totals.cnt, (concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , totals where u.definition is not null and totals.prefix = BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') ',
+
+      'with total as (select count(*) as cnt 	 from usem u2 	 ), 	 totals as ( 	select BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as cnt 	from usem u2 	group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') 	) 	 select \\\'Example\\\', \\\'All\\\', count(*) as num, total.cnt as total, ANY_VALUE(concat(round(( COUNT(*)/total.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , total where u.exemple is not null UNION 	 select \\\'Example\\\', BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as num, totals.cnt, (concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , totals where u.exemple is not null and totals.prefix = BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') ',
+
+      'with total as (select count(*) as cnt 	 from usem u2 	 ), 	 totals as ( 	select BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as cnt 	from usem u2 	group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') 	) 	 select \\\'Comment\\\', \\\'All\\\', count(*) as num, total.cnt as total, ANY_VALUE(concat(round(( COUNT(*)/total.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , total where u.comment is not null UNION 	 select \\\'Comment\\\', BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as num, totals.cnt, (concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , totals where u.comment is not null and totals.prefix = BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') ',
+
+      'with total as (select count(*) as cnt 	 from usem u2 	 ), 	 totals as ( 	select BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as cnt 	from usem u2 	group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') 	) select \\\'SynU\\\', \\\'All\\\', count(*) as num, total.cnt as total, ANY_VALUE(concat(round(( COUNT(*)/total.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , total where u.idUsem in (select u3.idUsem from usynusem u3) UNION 	 select \\\'SynU\\\', BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as num, totals.cnt, (concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , totals where u.idUsem in (select u3.idUsem from usynusem u3) and totals.prefix = BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\')',
+
+      'with total as (select count(*) as cnt 	 from usem u2 	 ), 	 totals as ( 	select BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as cnt 	from usem u2 	group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') 	) select \\\'Trait\\\', \\\'All\\\', count(*) as num, total.cnt as total, ANY_VALUE(concat(round(( COUNT(*)/total.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , total where u.idUsem in (select u4.idUsem from usemtraits u4) UNION 	 select \\\'Trait\\\', BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as num, totals.cnt, (concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , totals where u.idUsem in (select u4.idUsem from usemtraits u4) and totals.prefix = BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\')',
+
+      'with total as (select count(*) as cnt 	 from usem u2 	 ), 	 totals as ( 	select BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as cnt 	from usem u2 	group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') 	) select \\\'Template\\\', \\\'All\\\', count(*) as num, total.cnt as total, ANY_VALUE(concat(round(( COUNT(*)/total.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , total where u.idUsem in (select u4.idUsem from usemtemplates u4) UNION 	 select \\\'Template\\\', BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as num, totals.cnt, (concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , totals where u.idUsem in (select u4.idUsem from usemtemplates u4) and totals.prefix = BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\')',
+
+      'with total as (select count(*) as cnt 	 from usem u2 	 ), 	 totals as ( 	select BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as cnt 	from usem u2 	group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') 	) select \\\'Predicate\\\', \\\'All\\\', count(*) as num, total.cnt as total, ANY_VALUE(concat(round(( COUNT(*)/total.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , total where u.idUsem in (select u4.idUsem from usempredicate u4) UNION 	 select \\\'Predicate\\\', BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as num, totals.cnt, (concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , totals where u.idUsem in (select u4.idUsem from usempredicate u4) and totals.prefix = BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\')',
+
+ 'with total as (select count(*) as cnt 	 from usem u2 	 ), 	 totals as ( 	select BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as cnt 	from usem u2 	group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') 	) select \\\'Relation\\\', \\\'All\\\', count(*) as num, total.cnt as total, ANY_VALUE(concat(round(( COUNT(*)/total.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , total where u.idUsem in (select u4.idUsem from usemrel u4) UNION 	 select \\\'Relation\\\', BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') as prefix, count(*) as num, totals.cnt, (concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from usem u , totals where u.idUsem in (select u4.idUsem from usemrel u4) and totals.prefix = BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\') group by BINARY REPLACE(REGEXP_SUBSTR(idUsem ,\\\'^(USemTH|USem0?D|USem)\\\',1,1,\\\'c\\\'),\\\'USem0D\\\',\\\'USemD\\\')',
+
+      'with sumD as ( select sum(t.cnt) as num from (select u.idUsem , u.idUsyn, count(*) as cnt from usynusem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\' group by u.idUsem , u.idUsyn) as t), countD as ( select count(*) as tot from (select u.idUsem , u.idUsyn from usynusem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\' group by u.idUsem , u.idUsyn) as v), sumTH as ( select sum(t.cnt) as num from (select u.idUsem , u.idUsyn, count(*) as cnt from usynusem u where BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' group by u.idUsem , u.idUsyn) as t), countTH as ( select count(*) as tot from (select u.idUsem , u.idUsyn from usynusem u where BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' group by u.idUsem , u.idUsyn) as v), sumS as ( select sum(t.cnt) as num from (select u.idUsem , u.idUsyn, count(*) as cnt from usynusem u where BINARY u.idUsem REGEXP BINARY \\\'^USem[^(D|TH)]\\\' group by u.idUsem , u.idUsyn) as t), countS as ( select count(*) as tot from (select u.idUsem , u.idUsyn from usynusem u where BINARY u.idUsem REGEXP BINARY \\\'^USem[^(D|TH)]\\\' group by u.idUsem , u.idUsyn) as v) select \\\'avg of SynUs Dummies\\\', num, tot, num/tot as average from sumD, countD union select \\\'avg of SynUs Thamus\\\', num, tot, num/tot from sumTH, countTH union select \\\'avg of SynUs Standard\\\', num, tot, num/tot from sumS, countS',
+
+      'with sumD as ( select sum(t.cnt) as num from (select u.idUsem , count(*) as cnt from usemtraits u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\' group by u.idUsem ) as t), countD as ( select count(*) as tot from (select u.idUsem from usemtraits u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\' group by u.idUsem ) as v), sumTH as ( select sum(t.cnt) as num from (select u.idUsem , count(*) as cnt from usemtraits u where BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' group by u.idUsem ) as t), countTH as ( select count(*) as tot from (select u.idUsem from usemtraits u where BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' group by u.idUsem ) as v), sumS as ( select sum(t.cnt) as num from (select u.idUsem , count(*) as cnt from usemtraits u where BINARY u.idUsem REGEXP BINARY \\\'^USem[^(D|TH)]\\\' group by u.idUsem ) as t), countS as ( select count(*) as tot from (select u.idUsem from usemtraits u where BINARY u.idUsem REGEXP BINARY \\\'^USem[^(D|TH)]\\\' group by u.idUsem ) as v) select \\\'avg of traits Dummies\\\', num, tot, num/tot as average from sumD, countD union select \\\'avg of traits Thamus\\\', num, tot, num/tot from sumTH, countTH union select \\\'avg of traits Standard\\\', num, tot, num/tot from sumS, countS',
+
+     'with sumD as ( select sum(t.cnt) as num from (select u.idUsem , count(*) as cnt from usemtemplates u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\' group by u.idUsem ) as t), countD as ( select count(*) as tot from (select u.idUsem from usemtemplates u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\' group by u.idUsem ) as v), sumTH as ( select sum(t.cnt) as num from (select u.idUsem , count(*) as cnt from usemtemplates u where BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' group by u.idUsem ) as t), countTH as ( select count(*) as tot from (select u.idUsem from usemtemplates u where BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' group by u.idUsem ) as v), sumS as ( select sum(t.cnt) as num from (select u.idUsem , count(*) as cnt from usemtemplates u where BINARY u.idUsem REGEXP BINARY \\\'^USem[^(D|TH)]\\\' group by u.idUsem ) as t), countS as ( select count(*) as tot from (select u.idUsem from usemtemplates u where BINARY u.idUsem REGEXP BINARY \\\'^USem[^(D|TH)]\\\' group by u.idUsem ) as v) select \\\'avg of templates Dummies\\\', num, tot, num/tot as average from sumD, countD union select \\\'avg of templates Thamus\\\', num, tot, num/tot from sumTH, countTH union select \\\'avg of templates Standard\\\', num, tot, num/tot from sumS, countS',
+
+     'with sumD as ( select sum(t.cnt) as num from (select u.idUsem , count(*) as cnt from usempredicate u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\' group by u.idUsem ) as t), countD as ( select count(*) as tot from (select u.idUsem from usempredicate u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\' group by u.idUsem ) as v), sumTH as ( select sum(t.cnt) as num from (select u.idUsem , count(*) as cnt from usempredicate u where BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' group by u.idUsem ) as t), countTH as ( select count(*) as tot  from (select u.idUsem from usempredicate u where BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' group by u.idUsem ) as v), sumS as ( select sum(t.cnt) as num from (select u.idUsem , count(*) as cnt from usempredicate u where BINARY u.idUsem REGEXP BINARY \\\'^USem[^(D|TH)]\\\' group by u.idUsem ) as t), countS as ( select count(*) as tot from (select u.idUsem from usempredicate u where BINARY u.idUsem REGEXP BINARY \\\'^USem[^(D|TH)]\\\' group by u.idUsem ) as v) select \\\'avg of predicates Dummies\\\', num, tot, num/tot as average from sumD, countD union select \\\'avg of predicates Thamus\\\', num, tot, num/tot from sumTH, countTH union select \\\'avg of predicates Standard\\\', num, tot, num/tot from sumS, countS',
+
+     'with sumD as ( select sum(t.cnt) as num from (select u.idUsem , count(*) as cnt from usemrel u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\' group by u.idUsem ) as t), countD as ( select count(*) as tot from (select u.idUsem from usemrel u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\' group by u.idUsem ) as v), sumTH as ( select sum(t.cnt) as num from (select u.idUsem , count(*) as cnt from usemrel u where BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' group by u.idUsem ) as t), countTH as ( select count(*) as tot from (select u.idUsem from usemrel u where BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' group by u.idUsem ) as v), sumS as ( select sum(t.cnt) as num from (select u.idUsem , count(*) as cnt from usemrel u where BINARY u.idUsem REGEXP BINARY \\\'^USem[^(D|TH)]\\\' group by u.idUsem ) as t), countS as ( select count(*) as tot from (select u.idUsem from usemrel u where BINARY u.idUsem REGEXP BINARY \\\'^USem[^(D|TH)]\\\' group by u.idUsem ) as v) select \\\'avg of relations Dummies\\\', num, tot, num/tot as average from sumD, countD union select \\\'avg of relations Thamus\\\', num, tot, num/tot from sumTH, countTH union select \\\'avg of relations Standard\\\', num, tot, num/tot from sumS, countS',
+
+ ],
+
+ queries2 = [
+
+     'with totals as (select pos, count(*) as cnt from usyns group by pos), tot as ( select count(*) as cnt from usyns ) select \\\'Total\\\' as type, u.pos, count(*) as num, ANY_VALUE(concat(round(( COUNT(*)/tot.cnt * 100 ),2),\\\'%\\\')) as perc from usyns u, tot group by u.pos union select \\\'Standard\\\' as type, u.pos, count(*) as num, ANY_VALUE(concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from usyns u, totals where u.pos = totals.pos and BINARY u.idUsyn REGEXP BINARY \\\'^SYNU(?!TH)\\\' group by u.pos, BINARY REGEXP_SUBSTR(idUsyn ,\\\'^SYNU\\\',1,1,\\\'c\\\') union select \\\'Thamus\\\' as type, u.pos, count(*) as num, ANY_VALUE(concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from usyns u, totals where u.pos = totals.pos and BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' group by u.pos, BINARY REGEXP_SUBSTR(idUsyn ,\\\'^SYNUTH\\\',1,1,\\\'c\\\') order by type desc, num desc',
+
+     'WITH sumTH as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and u.pos is not NULL), countTH as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' ), sumS as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' and u.pos is not NULL), countS as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' ) select \\\'POS Thamus\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') as perc from sumTH, countTH union select \\\'POS Standard\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') from sumS, countS',
+
+     'WITH sumTH as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and u.idUms is not NULL), countTH as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' ), sumS as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' and u.idUms is not NULL), countS as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' ) select \\\'MUs in Thamus\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') as perc from sumTH, countTH union select \\\'MUs in Standard\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') from sumS, countS',
+
+     'with sumTH as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and u.idUsyn in (select u2.idUsyn from usynusem u2)), countTH as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\'), sumS as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' and u.idUsyn in (select u2.idUsyn from usynusem u2)), countS as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\') select \\\'SemUs Thamus\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') as perc from sumTH, countTH union select \\\'SemUs Standard\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') from sumS, countS',
+
+     'WITH sumTH as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and u.comment is not NULL), countTH as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' ), sumS as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' and u.comment is not NULL), countS as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' ) select \\\'comment in Thamus\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') as perc from sumTH, countTH union select \\\'comment in Standard\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') from sumS, countS',
+
+     'WITH sumTH as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and u.example is not NULL), countTH as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' ), sumS as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' and u.example is not NULL), countS as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' ) select \\\'example in Thamus\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') as perc from sumTH, countTH union select \\\'example in Standard\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') from sumS, countS',
+
+     'WITH sumTH as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and u.description is not NULL), countTH as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' ), sumS as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' and u.description is not NULL), countS as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' ) select \\\'description in Thamus\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') as perc from sumTH, countTH union select \\\'description in Standard\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') from sumS, countS',
+
+     'WITH sumTH as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and u.descriptionL is not NULL), countTH as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' ), sumS as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' and u.descriptionL is not NULL), countS as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' ) select \\\'descriptionL in Thamus\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') as perc from sumTH, countTH union select \\\'descriptionL in Standard\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') from sumS, countS',
+
+     'WITH sumTH as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and u.framesetL is not NULL), countTH as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' ), sumS as ( select count(*) as num from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' and u.framesetL is not NULL), countS as ( select count(*) as tot from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNU[^(TH)]\\\' ) select \\\'framesetL in Thamus\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') as perc from sumTH, countTH union select \\\'framesetL in Standard\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') from sumS, countS',
+ 
     ],
-    queries1 = [
-	'select pos, BINARY REGEXP_SUBSTR(idUsyn,\\\'^(SYNUTH|SYNU)\\\',1,1,\\\'c\\\') as type, count(*) as num from usyns group by pos, BINARY REGEXP_SUBSTR(idUsyn,\\\'^(SYNUTH|SYNU)\\\',1,1,\\\'c\\\') union select  pos , \\\'ALL\\\' as type, count(*) from usyns group by pos order by pos asc, num desc, type asc',
-    ],
-    queries2 = [
-	'select pos, count(*) as num from mus group by pos order by num DESC',
-    ],
+
+    
     queries3 = [
-	'select \\\'Total count\\\', count(*) as count from  phu union select \\\'Presence of phono\\\', count(*) from  phu where phono is not null union select \\\'Presence of sampa\\\', count(*) from  phu where sampa is not null union select \\\'Presence of syllables\\\', count(*) from  phu where syllables is not null',
+	'with totals as (select count(*) as cnt from mus) select a.pos, a.num, a.perc from ( select pos, count(*) as num, ANY_VALUE(concat(round(( COUNT(*)/totals.cnt * 100 ),4),\\\'%\\\')) as perc from mus, totals group by pos order by num DESC) as a union select b.pos, b.num, b.perc from (select \\\'Total\\\' as pos , count(*) as num, \\\'100%\\\' as perc from mus order by num DESC) as b',
+ 
+	'WITH notnull as ( select count(*) as num from mus m where m.pos is not NULL), totals as ( select count(*) as tot from mus m )select \\\'presence of POS\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') as perc from notnull, totals',
+
+	'WITH notnull as ( select count(*) as num from mus m where m.ginp is not NULL), totals as ( select count(*) as tot from mus m )select \\\'presence of ginp\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') as perc from notnull, totals',
+
+	'with notnull as ( select count(*) as num from mus m where m.idMus in ( select m2.idMus from musphu m2) ), totals as ( select count(*) as tot from mus m )select \\\'presence of link with PUs\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') as perc from notnull, totals',
+
+	'with totals as (select count(*) as cnt from musphu) select a.pos, a.num, a.perc from ( select pos, count(*) as num, ANY_VALUE(concat(round(( COUNT(*)/totals.cnt * 100 ),4),\\\'%\\\')) as perc from musphu, totals group by pos order by num desc) as a union select * from ( select \\\'TOTAL\\\' as pos, count(*) as num, \\\'100%\\\' as perc from musphu m ) as b',
+ 
     ],
+
+    
+    queries4 = [
+	'with totals as (select count(*) as cnt from phu) select \\\'presence of phono\\\', count(*) as num, totals.cnt as tot, ANY_VALUE(concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from phu, totals where phono is not null union select \\\'presence of sampa\\\', count(*) as num, totals.cnt as tot, ANY_VALUE(concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from phu, totals where sampa is not null union select \\\'presence of syllables\\\', count(*) as num, totals.cnt as tot, ANY_VALUE(concat(round(( COUNT(*)/totals.cnt * 100 ),2),\\\'%\\\')) as perc from phu, totals where syllables is not null',
+    ],
+
 ];
 
 /* Peculiar Entries Dropdown MENU */
@@ -245,33 +385,33 @@ var peculiarEntriesQueriesMenuLabel = [
 
 var peculiarEntriesQueriesLabel = [
     queriesLabel0 = [
-	'#Total count of Dummies',
-	'#USemD/template',
-	'#USemD/trait',
-	'#USemD/relation',
-	'#USemD/predicate',
-	'#UsemD/Usyn',
+	'Number of Dummy SemUs',
+	'Number of template connected to Dummy SemUs',
+	'Number of trait connected to Dummy SemUs',
+	'Number of relation connected to Dummy SemUs',
+	'Number of predicate connected to Dummy SemUs',
+	'Number of Usyn connected to Dummy SemUs',
     ],
     queriesLabel1 = [
-	'#Number of SemU Thamus',
-	'#Number of SynU Thamus',
-	'#Number of MUS associated to Usyn Thamus',
-	'#Number of MUS with NULL ginp associated to Usyn Thamus',
-	'#Number of Phu connected to MUS connected to SynU Thamus',
-	'#Number of SemU Thamus with NULL comment',
-	'#Number of SemU Thamus with NULL exemple',
-	'#Number of SemU Thamus with NULL definition',
-	'#Number of SemU Thamus with pos ADV ending with "mente"',
-	'#Number of Proper Nouns in SemU Thamus',
-	'#SYNUTH with a valid descriptionL',
-	'#SYNUTH with a valid framesetL',
-	'#Number of SynU con GINP nel comment',
-	'#Number of Usem Thamus with at least one template',
-	'#Number of Usem Thamus with two templates',
-	'#USem Thamus in relation ISA with another USem',
-	'#USem Thamus in relation with USem Thamus',
-	'#USYNUSEM tra syunTH e semuTH con idcorresp a NULL',
-	'#USYNUSEM tra syunTH e semuTH con idcorresp 70'
+	'Number of SemU Thamus',
+	'Number of SynU Thamus',
+	'Number of MUS associated to Usyn Thamus',
+	'Number of MUS with NULL ginp associated to Usyn Thamus',
+	'Number of Phu connected to MUS connected to SynU Thamus',
+	'Number of SemU Thamus with NULL comment',
+	'Number of SemU Thamus with NULL exemple',
+	'Number of SemU Thamus with NULL definition',
+	'Number of SemU Thamus with pos ADV ending with "mente"',
+	'Number of Proper Nouns in SemU Thamus',
+	'SYNUTH with a valid descriptionL',
+	'SYNUTH with a valid framesetL',
+	'Number of SynU con GINP nel comment',
+	'Number of Usem Thamus with at least one template',
+	'Usem Thamus with two templates',
+	'Number of USem Thamus in relation ISA with another USem',
+	'Number of USem Thamus in relation with USem Thamus',
+	'Number of USYNUSEM tra syunTH e semuTH con idcorresp a NULL',
+	'Number of USYNUSEM tra syunTH e semuTH con idcorresp 70'
     ],
     queriesLabel2 = [
 	'Coppie PHU ridondanti',
@@ -286,12 +426,12 @@ var peculiarEntriesQueriesLabel = [
 
 var peculiarEntriesQueries = [
     queries0 = [
-		'select count(*) from usem u  where  BINARY u.idUsem REGEXP  BINARY \\\'^USem0?D\\\' ',
-	'select count(*) from usemtemplates ut where ut.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY  \\\'^USemD\\\')',
-	'select count(*) from usemtraits ut where ut.idUsem in (select u.idUsem	from usem u where BINARY  u.idUsem REGEXP  BINARY \\\'^USemD\\\')',
-	'select count(*) from usemrel ur where ur.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY \\\'^USemD\\\')',
-	'select count(*) from usempredicate up where up.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY \\\'^USemD\\\')',
-	'select count(*) from usynusem uu where uu.idUsem in (select u.idUsem from usem u where BINARY  u.idUsem REGEXP BINARY \\\'^USemD\\\')',
+	'select count(*) from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\' ',
+	'select count(*) from usemtemplates ut where ut.idUsem in (select u.idUsem from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
+	'select count(*) from usemtraits ut where ut.idUsem in (select u.idUsem	from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
+	'select count(*) from usemrel ur where ur.idUsem in (select u.idUsem from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
+	'select count(*) from usempredicate up where up.idUsem in (select u.idUsem from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
+	'select count(*) from usynusem uu where uu.idUsem in (select u.idUsem from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
 		  ],
 
     querie2 = ['select count(*) from usem where idUsem REGEXP \\\'^USemTH\\\'',
@@ -311,20 +451,20 @@ var peculiarEntriesQueries = [
 	       'select idUsem, count(*) from usemtemplates where BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' group by idUsem  HAVING count(*) = 2',
 	       'select count(idUsem) from usemrel where idUsem REGEXP \\\'USemTH\\\' and idRSem = \\\'R146\\\'',
 	       'select count(idUsem) from usemrel where BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' and BINARY idUsemTarget  REGEXP BINARY \\\'^USemTH\\\'',
-	       'select count(*) from usynusem  where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' and idCorresp is NULL',
-	       'select count(*) from usynusem u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' and u.idCorresp = 70',
+	       'select count(*) from usynusem where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' and idCorresp is NULL',
+	       'select count(*) from usynusem where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' and idCorresp = 70',
 	      ],
     
     
     querie1 = [
-	'select m2.idMus , m.idMus, m.naming, m.pos, COALESCE (m.ginp, \\\'\\\') , COALESCE (m2.ginp, \\\'\\\') from mus m , mus m2  where m.naming = m2.naming  and m.pos = m2.pos  and m2.idMus > m.idMus  and COALESCE (m.ginp, \\\'\\\') = COALESCE (m2.ginp, \\\'\\\')',
-	'select t.duplicate, t.source, mp.pos , mp.morphFeat, mp.idKey , mp2.idKey  from musphu mp, musphu mp2,	(select m2.idMus as duplicate, m.idMus as source from mus m , mus m2 where m.naming = m2.naming and m.pos = m2.pos and m2.idMus > m.idMus  and COALESCE (m.ginp, \\\'\\\') = COALESCE (m2.ginp, \\\'\\\')) as t  where t.duplicate = mp.idMus and t.source = mp2.idMus and mp.pos = mp2.pos and mp.morphFeat = mp2.morphFeat ',
-	'select m2.idMus , m.idMus, m.naming, m.pos, COALESCE (m.ginp, \\\'\\\'), COALESCE (m2.ginp, \\\'\\\') from mus m , mus m2  where m.naming = m2.naming and m.pos = m2.pos and m2.idMus > m.idMus and m.ginp is NULL and m2.ginp is NOT NULL ',
+	'select m2.idMus , m.idMus, m.naming, m.pos, COALESCE (m.ginp, \\\'\\\') , COALESCE (m2.ginp, \\\'\\\') from mus m , mus m2 where m.naming = m2.naming and m.pos = m2.pos and m2.idMus > m.idMus and COALESCE (m.ginp, \\\'\\\') = COALESCE (m2.ginp, \\\'\\\')',
+	'select t.duplicate, t.source, mp.pos , mp.morphFeat, mp.idKey , mp2.idKey from musphu mp, musphu mp2,	(select m2.idMus as duplicate, m.idMus as source from mus m , mus m2 where m.naming = m2.naming and m.pos = m2.pos and m2.idMus > m.idMus and COALESCE (m.ginp, \\\'\\\') = COALESCE (m2.ginp, \\\'\\\')) as t where t.duplicate = mp.idMus and t.source = mp2.idMus and mp.pos = mp2.pos and mp.morphFeat = mp2.morphFeat ',
+	'select m2.idMus , m.idMus, m.naming, m.pos, COALESCE (m.ginp, \\\'\\\'), COALESCE (m2.ginp, \\\'\\\') from mus m , mus m2 where m.naming = m2.naming and m.pos = m2.pos and m2.idMus > m.idMus and m.ginp is NULL and m2.ginp is NOT NULL ',
     ],
     queries3  = [
-'select p2.idPhu, p2.naming, p2.phono from (select p.naming , p.phono, COUNT(*) as c from phu p group by p.naming , p.phono 	HAVING (c=2)) as t, phu p2 where p2.naming = t.naming  and p2.phono = t.phono',
-		   'select p2.idPhu, p2.naming, p2.phono from (select p.naming , p.phono, COUNT(*) as c	from phu p group by p.naming , p.phono HAVING (c=3)) as t, phu p2 where p2.naming = t.naming and p2.phono = t.phono',
-		   'SELECT * FROM usyns'
+'select p2.idPhu, p2.naming, p2.phono from (select p.naming , p.phono, COUNT(*) as c from phu p group by p.naming , p.phono 	HAVING (c=2)) as t, phu p2 where p2.naming = t.naming and p2.phono = t.phono',
+		 'select p2.idPhu, p2.naming, p2.phono from (select p.naming , p.phono, COUNT(*) as c	from phu p group by p.naming , p.phono HAVING (c=3)) as t, phu p2 where p2.naming = t.naming and p2.phono = t.phono',
+		 'SELECT * FROM usyns'
     ],
     queries4 =  [
 	'select * from mus',
@@ -364,7 +504,83 @@ function makeRedundantEntriesMenu () {
 	'select * from DuplicateMUSPHU',
     ];
 
-    updateQueriesList(arrayLabel, arrayQuery);
+    var arrayPseudocode = [
+	"\
+\'for (each pair of entries SemU<sub>a</sub> and SemU<sub>b</sub> belonging to table USEM)<br/>\
+  if (SemU<sub>a</sub> & SemU<sub>b</sub> have  <br/>\
+    same naming & same pos & same semantic traits & <br/>\
+    same templates & same predicates & same semantic relations) then <br/>\
+    if (SemU<sub>a</sub> and SemU<sub>b</sub> have same SynU of reference) then <br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition & same example) then <br/>\
+        mark the entry with higher id with status = 1;<br/>\
+      else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same example) then <br/>\
+	mark the entry with higher id with status = 2;<br/>\
+      else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition) then <br/>\
+        mark the entry with higher id with status = 3;<br/>\
+      else <br/>\
+        mark the entry with higher id with status = 4;<br/>\
+    else <br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition & same example) then <br/>\
+        mark the entry with higher id with status = 5;<br/>\
+      else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same example) then <br/>\
+        mark the entry with higher id with status = 6;<br/>\
+      else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition) then <br/>\
+        mark the entry with higher id with status = 7;<br/>\
+      else <br/>\
+        mark the entry with higher id with status = 8;\'",
+	"\
+\'for (each pair of entries PU<sub>a</sub> and PU<sub>b</sub> belonging to table PHU) <br/>\
+  if (PU<sub>a</sub> & PU<sub>b</sub> have same naming & same phono) then<br/>\
+    if (PU<sub>a</sub> and PU<sub>b</sub> have same MU of reference) then <br/>\
+      if (PU<sub>a</sub> and PU<sub>b</sub> have same morphFeat) then<br/>\
+        mark the entry with higher id with status = 1;<br/>\
+      else<br/>\
+        mark the entry with higher id with status = 2;<br/>\
+    else if (PU<sub>a</sub> has no MU of reference) then<br/>\
+      mark PU<sub>a</sub> with status = 3;<br/>\
+    else if (PU<sub>b</sub> has no MU of reference) then<br/>\
+      mark PU<sub>b</sub> with status = 3;<br/>\
+    else<br/>\
+      mark the entry with higher id with status = 4;\'",
+	"\
+\'for (each pair of entries SynU<sub>a</sub> and SynU<sub>b</sub> belonging to table USYNS)<br/>\
+  if (SynU<sub>a</sub> & SynU<sub>b</sub> have<br/>\
+    same naming & same pos & same description & <br/>\
+    same descriptionL & same framesetL) then<br/>\
+    if (SynU<sub>a</sub> and SynU<sub>b</sub> have same SemU of reference) then<br/>\
+      if (SynU<sub>a</sub> and SynU<sub>b</sub> have same idMus & same example) then<br/>\
+        mark the entry with higher id with status = 1;<br/>\
+      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same example) then<br/>\
+        mark the entry with higher id with status = 2;<br/>\
+      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same idMus) then<br/>\
+        mark the entry with higher id with status = 3;<br/>\
+      else<br/>\
+        mark the entry with higher id with status = 4;<br/>\
+    else<br/>\
+      if (SynU<sub>a</sub> and SynU<sub>b</sub> have same idMus & same example) then<br/>\
+        mark the entry with higher id with status = 5;<br/>\
+      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same example) then<br/>\
+        mark the entry with higher id with status = 6;<br/>\
+      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same idMus) then<br/>\
+        mark the entry with higher id with status = 7;<br/>\
+      else<br/>\
+        mark the entry with higher id with status = 8;\'",
+	"\
+\'for (each pair of entries MU<sub>a</sub> and MU<sub>b</sub> belonging to table MUS)<br/>\
+  if (MU<sub>a</sub> & MU<sub>b</sub> have<br/>\
+    same naming & <br/>\
+    same pos) then<br/>\
+    if (MU<sub>a</sub> & MU<sub>b</sub> have same ginp) then<br/>\
+      if (MU<sub>a</sub> and MU<sub>b</sub> have same PUs of reference) then<br/>\
+        mark the entry with higher id with status = 1;<br/>\
+      else <br/>\
+        if (MU<sub>a</sub> has ginp = null) then<br/>\
+          mark MU<sub>a</sub> with status = 2;<br/>\
+        if (MU<sub>b</sub> has ginp = null) then<br/>\
+          mark MU<sub>b</sub> with status = 2M\'",
+    ];
+    
+    updateQueriesList(arrayLabel, arrayQuery, arrayPseudocode);
     
 }
 
@@ -390,7 +606,7 @@ function makeDropDownMenu (menuId, arrayLabel, name) {
 * https://stackoverflow.com/questions/11128700/create-a-ul-and-fill-it-based-on-a-passed-array
 */
 
-function makeUL(arrayLabel, arrayQuery) {
+function makeUL(arrayLabel, arrayQuery, arrayPseudoCode) {
     // Create the list element:
     var list = document.createElement('ul');
     list.setAttribute('id', 'myMenu');
@@ -402,7 +618,18 @@ function makeUL(arrayLabel, arrayQuery) {
 	var newlink = document.createElement('a');
 	newlink.setAttribute('href', '#');
 	var index = i + 1;
-	newlink.setAttribute('onclick', "editorSetContent('"+arrayQuery[i]+"');runQuery();return false;");
+
+	// onclick attribute creation 
+	var attr = "sqlEditorSetContent('"+arrayQuery[i]+"');"
+	//if pseudo code should be shown in the pseudocodeTextarea
+	if (arrayPseudoCode) {
+	    //	    attr = attr.concat("codeEditorSetContent(pseudocodeTextarea,'"+arrayPseudoCode[i]+"');")
+//	    console.log( arrayPseudoCode[i]);
+	    attr = attr.concat("pseudocodeSetContent("+arrayPseudoCode[i]+");");
+	}
+	attr = attr.concat("runQuery();return false;");
+	newlink.setAttribute('onclick', attr);
+
         // Set its contents:
         newlink.appendChild(document.createTextNode(arrayLabel[i]));
         item.appendChild(newlink);
@@ -414,10 +641,18 @@ function makeUL(arrayLabel, arrayQuery) {
     return list;
 }
 
-function showHideMenu(id) {
-//    console.log(id);
-//    console.log(document.getElementById(id));
+function switchOnVisibilityElementId(id) {
+     document.getElementById(id).style.display = "block";
+}
+
+function switchOffVisibilityElementId(id) {
+     document.getElementById(id).style.display = "none";
+}
+
+function swapVisibilityElementId(id) {
+//    console.log("switchVisibilityElementId " + id);
     var el = document.getElementById(id);
+
     if (el.style.display === "none" ) {
 	el.style.display = "block";
     } else {
@@ -459,10 +694,17 @@ function updateQueriesListByIndex(queriesLabel, queries, index) {
     var arrayQuery = queries[index];
 
     updateQueriesList(arrayLabel, arrayQuery);
-
+    switchOffVisibilityElementId("code");
 }
 
 function updateQueriesList(arrayLabel, arrayQuery) {
 
-    document.getElementById('myMenu').replaceWith(makeUL(arrayLabel, arrayQuery));
+    updateQueriesList(arrayLabel, arrayQuery,null); 
+}
+
+
+function updateQueriesList(arrayLabel, arrayQuery, arrayPseudocode) {
+
+    document.getElementById('myMenu').replaceWith(makeUL(arrayLabel, arrayQuery, arrayPseudocode));
+
 }

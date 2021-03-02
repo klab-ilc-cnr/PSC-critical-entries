@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
     <!-- CodeMirror -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/codemirror.min.css" integrity="sha512-MWdvo/Qqcf4pY1ecQUB1uBn0qLp19U/qJ1Rpp2BDZeuBA7YsFEwkvqR/+aG4BroPiAYDunKJ6X8R/Pmdt3p7oA==" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/theme/idea.min.css" integrity="sha512-N+NJU9LvDmlEQyb3xDkcXPOR8SDXQGx4kRs9wCi/U6GPfN/FSsfjIzY61Svd8eg4Y1VcbBL1XhuC3VzzQYmcJg==" crossorigin="anonymous" />
@@ -17,7 +19,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/addon/edit/matchbrackets.min.js" integrity="sha512-rjbQerijlYZoHtP8XJGb7xkwnSRUHiydD8NE9fpe01feRM5RDZSZ9Tia+a9hV2cFHMilO4hZaeeTc9ESiik9wQ==" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/addon/hint/show-hint.min.js" integrity="sha512-0DOTP7HSS4G4YFu9YSLmHMmzSUQmK136iJLWMmy3TxaDBI6K/r9NSo7+5LmwPjwW97EkR5VT8qdRoLqv/D/TeQ==" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/addon/hint/sql-hint.min.js" integrity="sha512-OHVTwNN/yLMJj0zf2/pdkr/My9znB4byN7ibdXW+ha61wsKgAPyUZXAkgoQipu0MDQMfNmE17mFhNs9wLbK5QA==" crossorigin="anonymous"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.59.2/mode/clike/clike.min.js" integrity="sha512-PeD3V/6m5bFv3qyIVKgDh+huybMHjvsLWuW7ZH5WZsS+hY0pZNU24si/Yja/2D4c/ff++c6k1S240dKwhJEJzw==" crossorigin="anonymous"></script>
+
+    <!-- prettify.js -->
+   <!--script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script-->
+   <link rel="stylesheet" type="text/css" href="prettify/prettify.css">
+   <script type="text/javascript" src="prettify/prettify.js"></script>
+   
     <!--SQL Formatter-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql-formatter/4.0.2/sql-formatter.min.js" integrity="sha512-JPoVzOHQvXbB4+lOX6GOBM3xOZhwAMKRYn2G0VpfPcwIixAAvPL+HKuaFuevm+i6Q4GktSKY/CxlcB/1BaV/6Q==" crossorigin="anonymous"></script>
     <!--script src="https://cdnjs.cloudflare.com/ajax/libs/sql-formatter/3.1.0/sql-formatter.min.js" integrity="sha512-Oc+ctzmlsoi9ngpKwz6JSHcQJTJKfuUY8P7D74evSFg6wcE6dz6+SiFQn8Og2trQJP1KFE1HWFxVoV0+d5jyLA==" crossorigin="anonymous"></script-->						
@@ -63,9 +71,11 @@
 	<ul id="myMenu">
 	  &nbsp;
 	</ul>
+	<pre id="code" class="prettyprint lang-pascal" style="display: none;background-color:whitesmoke;">
+	</pre>
       </div>
       <div class="middle">
-	<textarea id="myTextarea" name="myTextarea" ></textarea>
+	<textarea id="sqlTextarea" name="sqlTextarea" ></textarea>
 	<div id="buttons" class="buttons">
 	  <button class="btn" onclick="runQuery()" ><i class="fa fa-play-circle"></i> Run</button>
 	  <button class="btn" onclick="clearFilters()"><i class="fa fa-stop-circle"></i> Clear Filters</button>
