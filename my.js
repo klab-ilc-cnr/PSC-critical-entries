@@ -37,12 +37,12 @@ window.onload = function() {
 	placeholder:"No Data Available", //display message to user on empty table
 	layout:"fitColumns",
 //	layout:"fitDataTable",
-	paginationSize:15,
+	paginationSize:25,
 	height:"480px",
 	width:"1500px",
 	layoutColumnsOnNewData:true,
 	pagination:"local", //enable local pagination.
-	paginationSizeSelector:[15, 50, 100, 1000, 10000], //enable page size select element with these options
+	paginationSizeSelector:[10,25, 50, 100, 1000, 10000], //enable page size select element with these options
 	ajaxResponse:function(url, params, response){
             //url - the URL of the request
             //params - the parameters passed with the request
@@ -390,8 +390,8 @@ var peculiarEntriesQueriesLabel = [
     queriesLabel1 = [
 	'Number of SemU Thamus',
 	'Number of SynU Thamus',
-	'Number of MUS associated to Usyn Thamus',
-	'Number of MUS with NULL ginp associated to Usyn Thamus',
+	'Number of MUS associated to SynU Thamus',
+	'Number of MUS with NULL ginp associated to SynU Thamus',
 	'Number of Phu connected to MUS connected to SynU Thamus',
 	'Number of SemU Thamus with NULL comment',
 	'Number of SemU Thamus with NULL exemple',
