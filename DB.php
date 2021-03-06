@@ -19,6 +19,7 @@ try  {
         http_response_code(500);
         header('Content-Type: application/json; charset=UTF-8');
         echo json_encode(array('type' => 'ERROR', 'message' => 'Connect Error: ' . $mysqli->connect_error));
+        $mysqli->close();
         return;
     }
     $tabledata = array();
