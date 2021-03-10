@@ -379,15 +379,24 @@ var peculiarEntriesQueriesMenuLabel = [
 ];
 
 var peculiarEntriesQueriesLabel = [
-    queriesLabel0 = [
+    peculiarDummiesLabel = [
 	'Number of Dummy SemUs',
+	'Number of Dummy SemUs sharing naming with USem',
+	'Number of Dummy SemUs sharing naming with SemUs Thamus',
+	'Number of Dummy SemUs with NULL definition',
+	'Number of Dummy SemUs with definition and withou semantic relations',
+	'Number of Dummy SemUs without semantic relations',
+	'Number of Dummy SemUs without predicates',
+	'Number of Dummy SemUs with NULL example',
+	'Number of Dummy SemUs with NULL naming',
+	'Number of Dummy SemUs with comment',
 	'Number of template connected to Dummy SemUs',
 	'Number of trait connected to Dummy SemUs',
 	'Number of relation connected to Dummy SemUs',
 	'Number of predicate connected to Dummy SemUs',
 	'Number of Usyn connected to Dummy SemUs',
     ],
-    queriesLabel1 = [
+    peculiarThamusLabel = [
 	'Number of SemU Thamus',
 	'Number of SynU Thamus',
 	'Number of MUs associated to SynU Thamus',
@@ -403,33 +412,33 @@ var peculiarEntriesQueriesLabel = [
 	'Number of SynU Thamus con GINP nel comment',
 	'Number of SemU Thamus with at least one template',
 	'SemU Thamus with two templates',
-	'Number of SemU Thamus in relation ISA with another SemU',
+	'Number of SemU Thamus in relation ISA with another SemU Thamus',
 	'Number of SemU Thamus in relation with SemU Thamus',
 	'Number of USYNUSEM tra SynU Thamus e SemU Thamus con idCorresp a NULL',
 	'Number of USYNUSEM tra SynU Thamus e SemU Thamus con idCorresp 70'
     ],
-    queriesLabel2 = [
-	'Coppie PHU ridondanti',
-	'Triple PHU ridondanti',
-    ],
-    queriesLabel3 = [
-	'IF (MUa & MUb have same ginp) THEN',
-	'#3.4.1 - Table YYY. The two analysed MUs appearing in table MUSPHU.',
-	'IF (MUa & MUb have same ginp) ELSE ###IF MUa has ginp NULL (#944)',
-    ]
 ];
 
 var peculiarEntriesQueries = [
-    queries0 = [
-	'select count(*) from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\' ',
-	'select count(*) from usemtemplates ut where ut.idUsem in (select u.idUsem from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
-	'select count(*) from usemtraits ut where ut.idUsem in (select u.idUsem	from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
-	'select count(*) from usemrel ur where ur.idUsem in (select u.idUsem from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
-	'select count(*) from usempredicate up where up.idUsem in (select u.idUsem from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
-	'select count(*) from usynusem uu where uu.idUsem in (select u.idUsem from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
+    peculiarDummiesQueries = [
+	'select count(*) as count from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem[0-9]?D\\\'',
+	'select count(*) as count from usem u where BINARY  u.idUsem REGEXP BINARY \\\'^USem[0-9]?D\\\' and u.naming in (select u2.naming from usem u2 where BINARY u2.idUsem REGEXP BINARY \\\'^USem(?!TH|0?D)\\\')',
+	'select count(*) as count from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem[0-9]?D\\\' and u.naming in (select u2.naming from usem u2 where BINARY u2.idUsem REGEXP BINARY \\\'^USemTH\\\')',
+	'select count(*) as count from usem u where BINARY u.idUsem REGEXP  BINARY \\\'^USem[0-9]?D\\\' and u.definition is NULL ',
+	'select count(*) as count from usem u where BINARY u.idUsem REGEXP  BINARY \\\'^USem[0-9]?D\\\' and u.definition is not NULL and idUsem not in (select idUsem from usemrel)',
+	'select count(*) as count from usem where BINARY idUsem REGEXP  BINARY \\\'^USem[0-9]?D\\\' and idUsem not in (select idUsem from usemrel) ',
+	'select count(*) as count from usem where BINARY idUsem REGEXP  BINARY \\\'^USem[0-9]?D\\\' and idUsem not in (select idUsem from usempredicate)',
+	'select count(*) as count from usem where BINARY idUsem REGEXP BINARY  \\\'^USem[0-9]?D\\\' and exemple is NULL',
+	'select count(*) as count from usem where BINARY idUsem REGEXP BINARY  \\\'^USem[0-9]?D\\\' and naming is NULL',
+	'select count(*) as count from usem where BINARY idUsem REGEXP BINARY  \\\'^USem[0-9]?D\\\' and comment is not NULL',
+	'select count(*) as count from usemtemplates ut where ut.idUsem in (select u.idUsem from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
+	'select count(*) as count from usemtraits ut where ut.idUsem in (select u.idUsem from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
+	'select count(*) as count from usemrel ur where ur.idUsem in (select u.idUsem from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
+	'select count(*) as count from usempredicate up where up.idUsem in (select u.idUsem from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
+	'select count(*) as count from usynusem uu where uu.idUsem in (select u.idUsem from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
 		  ],
 
-    querie2 = ['select count(*) from usem where idUsem REGEXP \\\'^USemTH\\\'',
+    peculiarThamusQueries = ['select count(*) from usem where idUsem REGEXP \\\'^USemTH\\\'',
 	       'select count(*) from usyns where idUsyn REGEXP \\\'^SYNUTH\\\'',
 	       'select count(distinct idUms) from usyns where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\'',
 	       'select count(*) from mus m where m.idMus in (select u.idUms from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\') and m.ginp is NULL',
