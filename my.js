@@ -439,7 +439,7 @@ var peculiarEntriesQueries = [
 	'select count(*) as count from usynusem uu where uu.idUsem in (select u.idUsem from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USem0?D\\\')',
 		  ],
 
-    peculiarThamusQueries = ['select count(*) from usem where BINARY idUsem REGEXPBINARY \\\'^USemTH\\\'',
+    peculiarThamusQueries = ['select count(*) from usem where BINARY idUsem REGEXP BINARY \\\'^USemTH\\\'',
 	       'select count(*) from usyns where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\'',
 	       'select count(distinct idUms) from usyns where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\'',
 	       'select count(*) from mus m where m.idMus in (select u.idUms from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\') and m.ginp is NULL',
