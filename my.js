@@ -5,6 +5,22 @@ const sqlTextarea = "sqlTextarea";
 
 window.onload = function() {
 
+    var percFormatter = function(cell, formatterParams) {
+	return "<pre style='margin:0;'>" + cell.getValue().padStart(7) + "</pre>";
+    };
+
+    var averageFormatter  = function(cell, formatterParams) {
+
+	const formatConfig = {
+	    style: "decimal",
+	    minimumFractionDigits: 4,
+	};
+	var val = new Intl.NumberFormat('it-IT',formatConfig).format(Number(cell.getValue()))
+
+	return "<pre style='margin:0;'>" + val + "</pre>";
+    };
+
+
     //CODEMIRROR Editor init
     var editor = new CodeMirror.fromTextArea(document.getElementById(sqlTextarea), {
 	lineNumbers: true, 
@@ -22,27 +38,19 @@ window.onload = function() {
     //TABULATOR table result init
     var table = new Tabulator("#example-table", {
 	autoColumns:true,
-/*	autoColumnsDefinitions:[
-	    {field:"id", visible:false},
-            {field:"idRedundant", headerFilter:true}, //add input editor to the name column
-            {field:"idReferred", headerFilter:true}, //add header filters to the age column
-            {field:"idPhu", headerFilter:true}, //add header filters to the age column
-            {field:"idMus", headerFilter:true}, //add header filters to the age column
-	    {field:"status", headerFilter:true, headerFilterFunc:"="},
-	    {field:"naming", headerFilter:true, headerFilterFunc:"starts"},
-	    {field:"phono", headerFilter:true, headerFilterFunc:"starts"},
-	    {field:"pos", headerFilter:true, headerFilterFunc:"="},
-	    
-	],*/
 	placeholder:"No Data Available", //display message to user on empty table
-	layout:"fitColumns",
+//	layout:"fitColumns",
+	layout:"fitDataFill",
 //	layout:"fitDataTable",
 	paginationSize:25,
 	height:"480px",
-	width:"1500px",
+	columnMinWidth:150,
 	layoutColumnsOnNewData:true,
 	pagination:"local", //enable local pagination.
 	paginationSizeSelector:[10,25, 50, 100, 1000, 10000], //enable page size select element with these options
+
+
+
 	ajaxResponse:function(url, params, response){
             //url - the URL of the request
             //params - the parameters passed with the request
@@ -67,7 +75,6 @@ window.onload = function() {
 
 	autoColumnsDefinitions:function(definitions){
             //definitions - array of column definition objects
-//	    console.log(definitions);
             definitions.forEach((column) => {
 		column.headerFilter = true; // add header filter to every column
 		/*		field: "id"
@@ -77,6 +84,29 @@ window.onload = function() {
 		if(column.field==="id") {
 		    column.visible=false;
 		}
+
+		if(column.sorter==="number" ) {
+		    column.headerFilterFunc="=";
+		    column.hozAlign="right";
+		    column.formatter="money";
+		    column.formatterParams={decimal:",",
+					    thousand:".",
+					    precision:false,
+					   }
+		    
+		}
+
+		if(column.field==="perc") {
+		    column.hozAlign="left";
+		    column.formatter=percFormatter;
+		}
+		
+		//average deve essere dopo number altrimenti e' sovrascritto il formatter
+		if(column.field==="average") {
+		    column.hozAlign="right";
+		    column.formatter=averageFormatter;
+		}
+
 		if(column.sorter==="string") {
 //		    column.headerFilterFunc="starts";
 		}
@@ -84,9 +114,6 @@ window.onload = function() {
 //		    column.headerFilterFunc="starts";
 		}
 		
-		if(column.sorter==="number" ) {
-		    column.headerFilterFunc="=";
-		}
 
 		if(column.field.toLowerCase().startsWith("count")) {
 		    column.headerFilter=false;
@@ -125,6 +152,7 @@ window.onload = function() {
 } //window.onload() END
 
 
+
 window.onclick = function(e) {
     //to manage dropdown menus visibility (joined to showHideOther() )
     if (!e.target.matches('.dropbtn')) {
@@ -134,6 +162,8 @@ window.onclick = function(e) {
 	}
     }
 }
+
+
 
 function selectTheme(t) {
     var input = document.getElementById("select");
