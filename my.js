@@ -230,7 +230,7 @@ function editorSetContent(textarea,content){
 function runQuery() {
     //remove any error message
     var el = document.getElementById("querystatus");
-    el.innerHTML ="";
+    el.innerHTML = "Query in progess...";
     el.className = "success";
   //  var editor = document.querySelector('.CodeMirror').CodeMirror;
     var editor = document.querySelector('#'.concat(sqlTextarea)).nextSibling.CodeMirror;
