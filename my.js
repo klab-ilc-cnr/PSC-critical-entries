@@ -6,7 +6,8 @@ const sqlTextarea = "sqlTextarea";
 window.onload = function() {
 
     var percFormatter = function(cell, formatterParams) {
-	return "<pre style='margin:0;'>" + cell.getValue().padStart(7) + "</pre>";
+	console.log(cell.getValue());
+	return "<pre style='margin:0;'>" + cell.getValue().padStart(9) + "</pre>";
     };
 
     var averageFormatter  = function(cell, formatterParams) {
