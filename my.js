@@ -525,7 +525,8 @@ function makeRedundantEntriesMenu () {
 	'Redundant Syntactic Units',
 	'Redundant Morphological Units',
 	'Forms in MUSPHU linked to redundant PUs',
-	'Duplicate rows in MUSPHU'
+	'Duplicate rows in MUSPHU',
+	'Duplicate rows in UsynUsem',
     ];
     
     var arrayQuery = [
@@ -535,6 +536,7 @@ function makeRedundantEntriesMenu () {
 	'select * from RedundantMus',
 	'select * from RedundantMusPhu',
 	'select * from DuplicateMUSPHU',
+	'select * from DuplicateUsynUsem',
     ];
 
     var arrayPseudocode = [
