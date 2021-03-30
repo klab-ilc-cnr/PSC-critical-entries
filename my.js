@@ -313,6 +313,7 @@ var sizeAndCoverageQueriesLabel = [
 	'The presence of ginp',
 	'The presence of PUs',
 	'The distribution of all Musphu with the POS and percentage',
+	'The distribution of the morphFeat in Musphu',
     ],
 
     queriesLabel4 = [
@@ -393,6 +394,8 @@ var sizeAndCoverageQueries = [
 	'with notnull as ( select count(*) as num from mus m where m.idMus in ( select m2.idMus from musphu m2) ), totals as ( select count(*) as tot from mus m )select \\\'presence of link with PUs\\\', num, tot, concat(round(( num/tot * 100 ),2),\\\'%\\\') as perc from notnull, totals',
 
 	'with totals as (select count(*) as cnt from musphu) select a.pos, a.num, a.perc from ( select pos, count(*) as num, ANY_VALUE(concat(round(( COUNT(*)/totals.cnt * 100 ),4),\\\'%\\\')) as perc from musphu, totals group by pos order by num desc) as a union select * from ( select \\\'TOTAL\\\' as pos, count(*) as num, \\\'100%\\\' as perc from musphu m ) as b',
+
+	'WITH totals AS (SELECT COUNT(*) AS cnt FROM musphu) select morphFeat , count(*) as num, ANY_VALUE(concat(round((COUNT(*) / totals.cnt * 100), 2), \\\'%\\\')) AS perc from musphu m , totals group by morphFeat  order by num desc',
  
     ],
     
