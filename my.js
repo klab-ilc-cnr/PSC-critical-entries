@@ -547,41 +547,41 @@ function makeRedundantEntriesMenu () {
 	"\
 \'foreach (pair of entries SemU<sub>a</sub> and SemU<sub>b</sub> &isin; USEM)<br/>\
   if (SemU<sub>a</sub> &  SemU<sub>b</sub> have same naming & same pos & same semantic traits &<br/>\
-      same templates & same predicates & same semantic relations) then<br/>\
-      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same SynU of reference) then<br/>\
-        if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition & same example & same comment) then<br/>\
-          mark the entry with higher id with status := 15<br/>\
-        else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition & same example) then<br/>\
-          mark the entry with higher id with status := 14<br/>\
-        else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same comment & same example) then<br/>\
-          mark the entry with higher id with status := 13<br/>\
-        else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same example)<br/>\
-          mark the entry with higher id with status := 12<br/>\
-        else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same comment & same definition) then<br/>\
-          mark the entry with higher id with status := 11<br/>\
-        else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition) then<br/>\
-          mark the entry with higher id with status := 10 <br/>\
-        else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same comment) then<br/>\
-          mark the entry with higher id with status := 9<br/>\
-        else <br/>\
-          mark the entry with higher id with status := 8<br/>\
+    same templates & same predicates & same semantic relations) then<br/>\
+    if (SemU<sub>a</sub> and SemU<sub>b</sub> have same SynU of reference) then<br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition & same example & same comment) then<br/>\
+        mark the entry with higher id with status := 15<br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition & same example) then<br/>\
+        mark the entry with higher id with status := 14<br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same comment & same example) then<br/>\
+        mark the entry with higher id with status := 13<br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same example)<br/>\
+        mark the entry with higher id with status := 12<br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same comment & same definition) then<br/>\
+        mark the entry with higher id with status := 11<br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition) then<br/>\
+        mark the entry with higher id with status := 10 <br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same comment) then<br/>\
+        mark the entry with higher id with status := 9<br/>\
+      else <br/>\
+        mark the entry with higher id with status := 8<br/>\
+    else<br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition & same example & same comment) then<br/>\
+        mark the entry with higher id with status := 7<br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition & same example) then<br/>\
+        mark the entry with higher id with status := 6<br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same comment & same example) then<br/>\
+        mark the entry with higher id with status := 5<br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same example)<br/>\
+        mark the entry with higher id with status := 4<br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same comment & same definition) then<br/>\
+        mark the entry with higher id with status := 3<br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition) then<br/>\
+        mark the entry with higher id with status := 2<br/>\
+      if (SemU<sub>a</sub> and SemU<sub>b</sub> have same comment) then<br/>\
+        mark the entry with higher id with status := 1<br/>\
       else<br/>\
-        if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition & same example & same comment) then<br/>\
-          mark the entry with higher id with status := 7<br/>\
-        else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition & same example) then<br/>\
-          mark the entry with higher id with status := 6<br/>\
-        else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same comment & same example) then<br/>\
-          mark the entry with higher id with status := 5<br/>\
-        else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same example)<br/>\
-          mark the entry with higher id with status := 4<br/>\
-        else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same comment & same definition) then<br/>\
-          mark the entry with higher id with status := 3<br/>\
-        else if (SemU<sub>a</sub> and SemU<sub>b</sub> have same definition) then<br/>\
-          mark the entry with higher id with status := 2<br/>\
-        else  if (SemU<sub>a</sub> and SemU<sub>b</sub> have same comment) then<br/>\
-          mark the entry with higher id with status := 1<br/>\
-        else<br/>\
-          mark the entry with higher id with status := 0;\'",
+        mark the entry with higher id with status := 0;\'",
 	
 	"\
 \'foreach (pair of entries PU<sub>a</sub> and PU<sub>b</sub> &isin; PHU) <br/>\
@@ -599,40 +599,40 @@ function makeRedundantEntriesMenu () {
       mark the entry with higher id with status := 4;\'",
 	
 	"\
-\'foreach (pair of entries SynU<sub>a</sub> and SynU<sub>b</sub> &isin; USYNS<br/>\
+\'foreach (pair of entries SynU<sub>a</sub> and SynU<sub>b</sub> &isin; USYNS)<br/>\
   if (SynU<sub>a</sub> & SynU<sub>b</sub> have same naming & same pos & same description &<br/>\
     same descriptionL & same framesetL) then<br/>\
     if (SynU<sub>a</sub> and SynU<sub>b</sub> have same SemU of reference) then<br/>\
       if (SynU<sub>a</sub> and SynU<sub>b</sub> have same idMus & same example & same comment) then<br/>\
         mark the entry with higher id with status := 15<br/>\
-      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same idMus & same example) then<br/>\
+      if (SynU<sub>a</sub> and SynU<sub>b</sub> have same idMus & same example) then<br/>\
         mark the entry with higher id with status := 14<br/>\
-      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same example & same comment) then<br/>\
+      if (SynU<sub>a</sub> and SynU<sub>b</sub> have same example & same comment) then<br/>\
         mark the entry with higher id with status := 13<br/>\
-      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same example) then<br/>\
+      if (SynU<sub>a</sub> and SynU<sub>b</sub> have same example) then<br/>\
         mark the entry with higher id with status := 12<br/>\
-      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same comment & same idMus) then<br/>\
+      if (SynU<sub>a</sub> and SynU<sub>b</sub> have same comment & same idMus) then<br/>\
         mark the entry with higher id with status := 11<br/>\
-      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same same idMus) then<br/>\
+      if (SynU<sub>a</sub> and SynU<sub>b</sub> have same same idMus) then<br/>\
         mark the entry with higher id with status := 10<br/>\
-      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same comment) then<br/>\
+      if (SynU<sub>a</sub> and SynU<sub>b</sub> have same comment) then<br/>\
         mark the entry with higher id with status := 9<br/>\
-      else <br/>\
+      <br/>\
         mark the entry with higher id with status := 8<br/>\
     else<br/>\
       if (SynU<sub>a</sub> and SynU<sub>b</sub> have same idMus & same example & same comment) then<br/>\
         mark the entry with higher id with status := 7<br/>\
-      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same idMus & same example) then<br/>\
+      if (SynU<sub>a</sub> and SynU<sub>b</sub> have same idMus & same example) then<br/>\
         mark the entry with higher id with status := 6<br/>\
-      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same example & same comment) then<br/>\
+      if (SynU<sub>a</sub> and SynU<sub>b</sub> have same example & same comment) then<br/>\
         mark the entry with higher id with status := 5<br/>\
-      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same example) then<br/>\
+      if (SynU<sub>a</sub> and SynU<sub>b</sub> have same example) then<br/>\
         mark the entry with higher id with status := 4<br/>\
-      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same comment & same idMus) then<br/>\
+      if (SynU<sub>a</sub> and SynU<sub>b</sub> have same comment & same idMus) then<br/>\
         mark the entry with higher id with status := 3<br/>\
-      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same same idMus) then<br/>\
+      if (SynU<sub>a</sub> and SynU<sub>b</sub> have same same idMus) then<br/>\
         mark the entry with higher id with status := 2<br/>\
-      else if (SynU<sub>a</sub> and SynU<sub>b</sub> have same comment) then<br/>\
+      if (SynU<sub>a</sub> and SynU<sub>b</sub> have same comment) then<br/>\
         mark the entry with higher id with status := 1<br/>\
       else <br/>\
         mark the entry with higher id with status := 0;\'",
@@ -645,11 +645,11 @@ function makeRedundantEntriesMenu () {
     if (MU<sub>a</sub> & MU<sub>b</sub> have same ginp) then<br/>\
       if (MU<sub>a</sub> and MU<sub>b</sub> have same PUs of reference) then<br/>\
         mark the entry with higher id with status := 1;<br/>\
-      else <br/>\
-        if (MU<sub>a</sub> has ginp == null) then<br/>\
-          mark MU<sub>a</sub> with status := 2;<br/>\
-        if (MU<sub>b</sub> has ginp == null) then<br/>\
-          mark MU<sub>b</sub> with status := 2;\'",
+    else <br/>\
+      if (MU<sub>a</sub> has ginp == null) then<br/>\
+        mark MU<sub>a</sub> with status := 2;<br/>\
+      if (MU<sub>b</sub> has ginp == null) then<br/>\
+        mark MU<sub>b</sub> with status := 2;\'",
     ];
     
     updateQueriesList(arrayLabel, arrayQuery, arrayPseudocode);
