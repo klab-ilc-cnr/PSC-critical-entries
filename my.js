@@ -411,7 +411,7 @@ var sizeAndCoverageQueries = [
 /* Peculiar Entries Dropdown MENU */
 var peculiarEntriesQueriesMenuLabel = [
     'The dummies entries',
-    'The thamus entries',
+    'The Thamus entries',
 ];
 
 var peculiarEntriesQueriesLabel = [
@@ -438,22 +438,23 @@ var peculiarEntriesQueriesLabel = [
 	'MUs connected to Thamus SynUs',
 	'MUs with NULL ginp connected to Thamus SynUs',
 	'PUs connected to MUs connected to Thamus SynUs',
-	'Thamus SemUs with NULL comment',
-	'Thamus SemUs with NULL exemple',
-	'Thamus SemUs with NULL definition',
-	'Thamus SemUs with pos "ADV" ending with "mente"',
+	'Thamus SemUs with no comment',
+	'Thamus SemUs with no example',
+	'Thamus SemUs with no definition',
+	'Thamus SemUs with PoS "ADV" ending with "-mente"',
 	'Proper Nouns in Thamus SemUs',
-	'Thamus SynUs with a valid descriptionL',
-	'Thamus SynUs with a valid framesetL',
-	'Thamus SynUs with the comment inside the GINP',
+	'Thamus SynUs with a descriptionL',
+	'Thamus SynUs with a framesetL',
+	'Thamus SynUs with the ginp as comment',
 	'Thamus SemUs with at least one template',
 	'Thamus SemUs with two templates',
-	'Thamus SemUs in relation ISA with another Thamus SemUs',
+	'Thamus SemUs in relation with another SemU',
+	'Thamus SemUs in relation ISA with another SemU',
 	'Thamus SemUs in relation with Thamus SemUs',
-	'USYNUSEM between Thamus with NULL idCorresp',
+	'USYNUSEM between Thamus entries with no idCorresp',
 	'USYNUSEM between Thamus entries with idCorresp = 70',
-	'Duplicates entries in USYNUSEM with idCorresp = 70',
-	'Redundants PUs connected to Thamus SynUs'
+	'Duplicate Thamus entries in USYNUSEM with idCorresp = 70',
+	'Redundant PUs connected to Thamus SynUs'
     ],
 ];
 
@@ -479,7 +480,7 @@ var peculiarEntriesQueries = [
     peculiarThamusQueries = [
 	'select * from usem where BINARY idUsem REGEXP BINARY \\\'^USemTH\\\'',
 	'select * from usyns where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\'',
-	'select distinct idUms from usyns where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\'',
+	'select distinct idUms, idUsyn from usyns where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\'',
 	'select * from mus m where m.idMus in (select u.idUms from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\') and m.ginp is NULL',
 	'select distinct idPhu from musphu where idMus in (select m.idMus from mus m where m.idMus in (select u.idUms from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\') )',
 	'select * from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' and u.comment is NULL',
@@ -489,11 +490,12 @@ var peculiarEntriesQueries = [
 	'select * from usem u where BINARY u.idUsem REGEXP BINARY \\\'^USemTH\\\' and u.pos = \\\'NP\\\'',
 	'select * from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and descriptionL is not NULL  and descriptionL <> ""',
 	'select * from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and framesetL is not NULL  and framesetL <> ""',
-	'select idUsyn from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and BINARY u.comment REGEXP BINARY \\\'^GINP\\\\\\\\d+$\\\'',
+	'select * from usyns u where BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and BINARY u.comment REGEXP BINARY \\\'^GINP\\\\\\\\d+$\\\'',
 	'select DISTINCT idUsem from usemtemplates  where BINARY idUsem REGEXP BINARY \\\'^USemTH\\\'',
 	'select idUsem, count(*) as count from usemtemplates where BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' group by idUsem  HAVING count(*) = 2',
-	'select idUsem from usemrel where BINARY idUsem REGEXP BINARY \\\'USemTH\\\' and idRSem = \\\'R146\\\'',
-	'select idUsem from usemrel where BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' and BINARY idUsemTarget  REGEXP BINARY \\\'^USemTH\\\'',
+	'select idUsem, idRSem, idUsemTarget from usemrel where BINARY idUsem REGEXP BINARY \\\'USemTH\\\'',
+	'select idUsem, \\\'ISA\\\', idUsemTarget from usemrel where BINARY idUsem REGEXP BINARY \\\'USemTH\\\' and idRSem = \\\'R146\\\'',
+	'select idUsem, idRSem, idUsemTarget from usemrel where BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' and BINARY idUsemTarget  REGEXP BINARY \\\'^USemTH\\\'',
 	'select * from usynusem where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' and idCorresp is NULL',
 	'select * from usynusem where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' and idCorresp = 70',
 	'select u2.ID, u2.idUsem , u2.idUsyn, u2.idCorresp, u2.description  from ( select idUsem , idUsyn , idCorresp , description ,count(*) as cnt from usynusem group by idUsem , idUsyn , idCorresp, description HAVING COUNT(*)>1 ) as u, usynusem u2 where u.idUsem = u2.idUsem AND u.idUsyn = u2.idUsyn AND u.idCorresp = u2.idCorresp AND u2.idCorresp = 70 and COALESCE (u.description,\\\'\\\') = COALESCE (u2.description,\\\'\\\') ORDER by idUsem ASC',
