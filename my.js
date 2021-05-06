@@ -453,6 +453,7 @@ var peculiarEntriesQueriesLabel = [
 	'USYNUSEM between Thamus with NULL idCorresp',
 	'USYNUSEM between Thamus entries with idCorresp = 70',
 	'Duplicates entries in USYNUSEM with idCorresp = 70',
+	'Redundants PUs connected to Thamus SynUs'
     ],
 ];
 
@@ -496,6 +497,7 @@ var peculiarEntriesQueries = [
 	'select * from usynusem where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' and idCorresp is NULL',
 	'select * from usynusem where BINARY idUsyn REGEXP BINARY \\\'^SYNUTH\\\' and BINARY idUsem REGEXP BINARY \\\'^USemTH\\\' and idCorresp = 70',
 	'select u2.ID, u2.idUsem , u2.idUsyn, u2.idCorresp, u2.description  from ( select idUsem , idUsyn , idCorresp , description ,count(*) as cnt from usynusem group by idUsem , idUsyn , idCorresp, description HAVING COUNT(*)>1 ) as u, usynusem u2 where u.idUsem = u2.idUsem AND u.idUsyn = u2.idUsyn AND u.idCorresp = u2.idCorresp AND u2.idCorresp = 70 and COALESCE (u.description,\\\'\\\') = COALESCE (u2.description,\\\'\\\') ORDER by idUsem ASC',
+	'select DISTINCT rp.idRedundant ,  u.idUsyn from RedundantPhu rp , musphu m , usyns u where rp.idRedundant = m.idPhu and m.idMus = u.idUms and BINARY u.idUsyn REGEXP BINARY \\\'^SYNUTH\\\'',
 	      ],
     
     
