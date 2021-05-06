@@ -264,60 +264,60 @@ function clearFilters() {
 /* Size and Coverage Dropdown MENU */
 
 var sizeAndCoverageQueriesMenuLabel = [
-    'The size and coverage of PSC',
-    'The number and coverage of SemUs',
-    'The number and coverage of SynUs',
-    'The number and coverage of MUs',
-    'The number and coverage of PUs',
+    'Size and coverage of PSC',
+    'Number and coverage of SemUs',
+    'Number and coverage of SynUs',
+    'Number and coverage of MUs',
+    'Number and coverage of PUs',
 ];
 
 var sizeAndCoverageQueriesLabel = [
 
     queriesLabel0 = [
-	'The distribution of all entries',
+	'Distribution of all entries',
     ],
 
     queriesLabel1 = [
-	'The distribution of SemUs per PoS',
-	'The distribution of PoS per class of SemU',
-	'The presence of definition',
-	'The presence of example',
-	'The presence of comment',
-	'The presence of SynUs',
-	'The presence of trait',
-	'The presence of template',
-	'The presence of predicate',
-	'The presence of relation',
-	'The average number of SynUs',
-	'The average number of traits',
-	'The average number of templates',
-	'The average number of predicates',
-	'The average number of relations',
+	'Distribution of SemUs per PoS',
+	'Distribution of PoS per class of SemU',
+	'Presence of definition',
+	'Presence of example',
+	'Presence of comment',
+	'Presence of SynUs',
+	'Presence of trait',
+	'Presence of template',
+	'Presence of predicate',
+	'Presence of relation',
+	'Average number of SynUs',
+	'Average number of traits',
+	'Average number of templates',
+	'Average number of predicates',
+	'Average number of relations',
     ],
 
     queriesLabel2 = [
-	'The distribution of all SynUs',
-	'The presence of PoS',
-	'The presence of MUs',
-	'The presence of SemUs',
-	'The presence of comment',
-	'The presence of example',
-	'The presence of description',
-	'The presence of descriptionL',
-	'The presence of framesetL',
+	'Distribution of all SynUs',
+	'Presence of PoS',
+	'Presence of MUs',
+	'Presence of SemUs',
+	'Presence of comment',
+	'Presence of example',
+	'Presence of description',
+	'Presence of descriptionL',
+	'Presence of framesetL',
     ],
 
     queriesLabel3 = [
-	'The distribution of all MUs',
-	'The presence of PoS',
-	'The presence of ginp',
-	'The presence of PUs',
-	'The distribution of all Musphu with the PoS and percentage',
-	'The distribution of the morphFeat in Musphu',
+	'Distribution of all MUs',
+	'Presence of PoS',
+	'Presence of ginp',
+	'Presence of PUs',
+	'Distribution of all Musphu with the PoS and percentage',
+	'Distribution of the morphFeat in MUSPHU',
     ],
 
     queriesLabel4 = [
-	'The distribution of all PUs',
+	'Distribution of all PUs',
     ],
 
 ];
@@ -410,8 +410,8 @@ var sizeAndCoverageQueries = [
 
 /* Peculiar Entries Dropdown MENU */
 var peculiarEntriesQueriesMenuLabel = [
-    'The dummies entries',
-    'The Thamus entries',
+    'Dummy entries',
+    'Thamus entries',
 ];
 
 var peculiarEntriesQueriesLabel = [
