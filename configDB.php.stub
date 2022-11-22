@@ -1,4 +1,7 @@
-<?php
+/*
+ * @author simone marchi <simone.marchi@ilc.cnr.it>
+ */
+ <?php
 return array(
     'hostname' => 'localhost',
     'username' => '',
