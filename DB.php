@@ -1,4 +1,7 @@
-<?php
+/*
+ * @author simone marchi <simone.marchi@ilc.cnr.it>
+ */
+ <?php
 
 ini_set("memory_limit","1024M");
 $config = include('configDB.php');
