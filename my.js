@@ -1,3 +1,6 @@
+/*
+ * @author simone marchi <simone.marchi@ilc.cnr.it>
+ */
 //TextArea for CodeMirror
 const sqlTextarea = "sqlTextarea";
 //const pseudocodeTextarea = "pseudocodeTextarea";
