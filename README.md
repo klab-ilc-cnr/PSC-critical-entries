@@ -1,6 +1,7 @@
 # queryPSC
 queryPSC is a simple PHP front end to query PSC lexicon stored in a MySQL server.
-
+# Autore
+* [Simone Marchi](https://www.ilc.cnr.it/en/people/simone-marchi/) -- simone.marchi[at]ilc.cnr.it -- *tecnologo@CNR-ILC* 
 ## Requirements
 * Apache
 * PHP (mod-php version >= 7.4)
