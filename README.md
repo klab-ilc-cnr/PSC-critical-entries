@@ -17,4 +17,4 @@ gunzip simplelexicon.dump.gz | mysql -u USER -p < simplelexicon.dump
 4. rename the configDB.php.stub in configDB.php and customize it in order to point the MySQL server with the correct hostname, username and password
 5. you should have to activate apache php module (```sudo a2enmod php8.1```) (the php module version varies with the distribution)
 6. reload Apache webserver to load the php module (```sudo systemctl reload apache2```)
-7. point the browser to http://localhost/queryPSC
+7. point the browser to http://localhost/PSC-critical-entries
